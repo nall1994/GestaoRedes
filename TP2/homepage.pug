@@ -1,0 +1,24 @@
+extends layout
+block content
+    .w3-container
+        .w3-card-4
+            header.w3-container.w3-indigo
+                h3(align='center') Monitorização com SNMP
+            br
+            .w3-container
+                table.w3-table-all
+                    tr
+                        th Nome da interface
+                        th Endereço Físico
+                        th inOctets
+                        th outOctets
+                        th Diferença de octetos    
+                    tr
+                        td= valores.ifDescr
+                        td= valores.PhysAddress
+                        td= valores.inOctets
+                        td= valores.outOctets
+                        td= valores.diferenca
+            br
+            footer.w3-container.w3-indigo
+                address(align='center') Gestão de Redes - Trabalho Prático nº2
