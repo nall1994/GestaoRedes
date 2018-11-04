@@ -12,13 +12,14 @@ block content
                         th Endereço Físico
                         th inOctets
                         th outOctets
-                        th Diferença de octetos    
-                    tr
-                        td= valores.ifDescr
-                        td= valores.PhysAddress
-                        td= valores.inOctets
-                        td= valores.outOctets
-                        td= valores.diferenca
+                        th Diferença de octetos  
+                    each valores in lista  
+                        tr
+                            td= valores.ifDescr
+                            td= valores.PhysAddress
+                            td= valores.inOctets
+                            td= valores.outOctets
+                            td= valores.diferenca
             br
             footer.w3-container.w3-indigo
                 address(align='center') Gestão de Redes - Trabalho Prático nº2

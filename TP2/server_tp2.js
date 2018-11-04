@@ -5,6 +5,9 @@ var pug = require('pug')
 var fs = require('fs')
 
 var app = express()
+var number_interfaces = 0
+var returnValues = []
+var returnValue = {ifDescr:"",PhysAddress:"",inOctets:"",outOctets:"",diferenca:""}
 
 app.get('/w3.css',(req,res)=> {
     res.writeHead(200,{'Content-Type':'text/css'})
@@ -17,9 +20,10 @@ app.get('/w3.css',(req,res)=> {
 
 app.get('/',(req,res) => {
     var session = snmp.createSession('localhost','public')
-    var returnValues = {ifDescr:"",PhysAddress:"",inOctets:"",outOctets:"",diferenca:""}
-    getSnmpVariables(session,returnValues)
-    setTimeout(writeHTML, 100,res,returnValues);
+    getNumberInterfaces(session)
+    setTimeout(getSnmpVariables,100,session)
+    console.log(JSON.stringify(returnValues))
+    setTimeout(writeHTML, 500,res);
     
     
 
@@ -27,59 +31,82 @@ app.get('/',(req,res) => {
 
 })
 
-function writeHTML(res,returnValues) {
-    returnValues['diferenca'] = (parseInt(returnValues['inOctets']) - parseInt(returnValues['outOctets'])).toString()
+function writeHTML(res) {
+    //returnValue['diferenca'] = (parseInt(returnValue['inOctets']) - parseInt(returnValue['outOctets'])).toString()
+    //console.log(returnValues)
     res.writeHead(200,{'Content-Type': 'text/html; charset=utf-8'})
-    res.write(pug.renderFile('homepage.pug',{valores: returnValues}))
+    //console.log(JSON.stringify(returnValues))
+    res.write(pug.renderFile('homepage.pug',{lista: returnValues}))
     res.end() 
 }
 
-function getSnmpVariables(session, returnValues) {
-    var oid = ["1.3.6.1.2.1.2.2.1.2.3"]
-    session.get(oid, (error,varbinds) => {
-        if(error) console.log('Fail: ' + error)
-        else {
-            returnValues['ifDescr'] = varbinds[0].value.toString()
-            console.log(JSON.stringify(varbinds[0]))
-        }
-    } )
+function getSnmpVariables(session) {
 
-    oid = ["1.3.6.1.2.1.2.2.1.6.3"]
-    session.get(oid, (error,varbinds) => {
-        if(error) console.log('Fail: ' + error)
-        else {
-            var data = JSON.parse(JSON.stringify(varbinds[0].value))
-            var str = ''
-            for(var i = 0; i < data.data.length; i++) {
-                if(i == (data.data.length - 1)) {
-                    str += data.data[i].toString(16)
-                } else {
-                    str += data.data[i].toString(16) + ':' 
-                }   
+    console.log('EEEEEEEE: ' + number_interfaces)
+    for(var i = 1; i< number_interfaces+1;i++) {
+        
+        getIndividualInterface(session,i)
+        returnValues.push(returnValue)
+    }
+}
+
+
+function getIndividualInterface(session,i) {
+    var oid = ["1.3.6.1.2.1.2.2.1.2." + i]
+        session.get(oid, (error,varbinds) => {
+            if(error) console.log('Fail: ' + error)
+            else {
+                returnValue['ifDescr'] = varbinds[0].value.toString()
+                //console.log(JSON.stringify(varbinds[0]))
             }
-            console.log(str)
-            returnValues['PhysAddress'] = str
-        }
-    } )
+        } )
 
-    oid = ["1.3.6.1.2.1.2.2.1.10.3"]
-    session.get(oid, (error,varbinds) => {
+        oid = ["1.3.6.1.2.1.2.2.1.6." + i]
+        session.get(oid, (error,varbinds) => {
+            if(error) console.log('Fail: ' + error)
+            else {
+                var data = JSON.parse(JSON.stringify(varbinds[0].value))
+                var str = ''
+                for(var i = 0; i < data.data.length; i++) {
+                    if(i == (data.data.length - 1)) {
+                        str += data.data[i].toString(16)
+                    } else {
+                        str += data.data[i].toString(16) + ':' 
+                    }   
+                }
+                console.log(str)
+                returnValue['PhysAddress'] = str
+            }
+        } )
+
+        oid = ["1.3.6.1.2.1.2.2.1.10." + i]
+        session.get(oid, (error,varbinds) => {
+            if(error) console.log('Fail: ' + error)
+            else {
+                returnValue['inOctets'] = varbinds[0].value.toString()
+                //console.log(varbinds[0].value.toString())      
+            }
+        } )
+
+        oid = ["1.3.6.1.2.1.2.2.1.16." + i]
+        session.get(oid, (error,varbinds) => {
+            if(error) console.log('Fail: ' + error)
+            else {
+                returnValue['outOctets'] = varbinds[0].value.toString()
+                //console.log(varbinds[0].value.toString())       
+            }
+        } )
+
+}
+
+function getNumberInterfaces(session) {
+    var oid = ["1.3.6.1.2.1.2.1.0"] 
+    session.get(oid,(error,varbinds) => {
         if(error) console.log('Fail: ' + error)
         else {
-            returnValues['inOctets'] = varbinds[0].value.toString()
-            console.log(varbinds[0].value.toString())      
+            number_interfaces = parseInt(varbinds[0].value)
         }
-    } )
-
-    oid = ["1.3.6.1.2.1.2.2.1.16.3"]
-    session.get(oid, (error,varbinds) => {
-        if(error) console.log('Fail: ' + error)
-        else {
-            returnValues['outOctets'] = varbinds[0].value.toString()
-            console.log(varbinds[0].value.toString())       
-        }
-    } )
-    
+    })
 }
 
 var myServer = http.createServer(app)
