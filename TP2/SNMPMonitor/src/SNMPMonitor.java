@@ -3,6 +3,9 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
+import java.io.File;
+import org.json.*;
+import org.apache.commons.io.FileUtils;
 
 public class SNMPMonitor {
     private static String path_to_database = "../Database/database.json";
@@ -113,10 +116,20 @@ public class SNMPMonitor {
             bufferedReader.close();
 
             if(!exists) {
+                //Quando um agente é adicionado, também deve ser adicionado à base de dados em json
                 FileWriter fileWriter = new FileWriter(path_to_config,true);
                 BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
                 bufferedWriter.write(agente.getIp() + ":" + agente.getPorta());
                 bufferedWriter.newLine();
+                File file = new File(path_to_database);
+                String content = FileUtils.readFileToString(file,"utf-8");
+                JSONArray infoAgentes = new JSONArray(content);
+                JSONObject newAgent = new JSONObject();
+                newAgent.put("ipAgente",agente.getIp());
+                newAgent.put("portaAgente",agente.getPorta());
+                newAgent.put("consultas",new JSONArray());
+                infoAgentes.put(newAgent);
+                FileUtils.writeStringToFile(file,infoAgentes.toString(4),"utf-8",false);
                 System.out.println("Agente com ip: " + agente.getIp() + " e porta: " + agente.getPorta() + " acrescentado!");
                 System.out.println("\n");
                 bufferedWriter.close();
@@ -149,6 +162,17 @@ public class SNMPMonitor {
             FileWriter fileWriter = new FileWriter(path_to_config,false);
             BufferedWriter bufferedWriter = new BufferedWriter((fileWriter));
             bufferedWriter.write(postWrite);
+            File file = new File(path_to_database);
+            String content = FileUtils.readFileToString(file,"utf-8");
+            JSONArray infoAgentes = new JSONArray(content);
+            JSONArray newInfoAgentes = new JSONArray();
+            for(int i = 0; i < infoAgentes.length();i++) {
+                JSONObject obj = infoAgentes.getJSONObject(i);
+                if(!((obj.getString("ipAgente").equalsIgnoreCase(agente.getIp())) && (obj.getString("portaAgente").equalsIgnoreCase(agente.getPorta())))) {
+                    newInfoAgentes.put(obj);
+                }
+            }
+            FileUtils.writeStringToFile(file,newInfoAgentes.toString(4),"utf-8",false);
             System.out.println("Agente removido com sucesso!");
             System.out.println("\n");
             bufferedWriter.close();
