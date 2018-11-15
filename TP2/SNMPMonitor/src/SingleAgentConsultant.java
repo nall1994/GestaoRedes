@@ -68,10 +68,10 @@ public class SingleAgentConsultant extends Thread{
     private String getIfDescrAsString(OID oid) throws IOException {
         ResponseEvent event = get(new OID[] {oid});
         if(event != null) {
-            /*Ainda não sei como converter esta para uma string que dê para ler*/
             String s = event.getResponse().get(0).getVariable().toString();
-            OctetString os = new OctetString(s);
-            return os.toHexString();
+            System.out.println("String result: " + s);
+            return s;
+
         } else {
             return "";
         }

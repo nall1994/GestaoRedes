@@ -1,5 +1,192 @@
 [{
-    "consultas": [],
+    "consultas": [
+        {
+            "dataConsulta": "2018-11-14",
+            "valoresInterfaces": [
+                {
+                    "ifIndex": "1",
+                    "outOctets": "653133621",
+                    "ifPhysAddress": "",
+                    "inOctets": "653133621",
+                    "ifDescr": "6c:6f:30",
+                    "difOctets": "0"
+                },
+                {
+                    "ifIndex": "2",
+                    "outOctets": "0",
+                    "ifPhysAddress": "",
+                    "inOctets": "0",
+                    "ifDescr": "67:69:66:30",
+                    "difOctets": "0"
+                },
+                {
+                    "ifIndex": "3",
+                    "outOctets": "0",
+                    "ifPhysAddress": "",
+                    "inOctets": "0",
+                    "ifDescr": "73:74:66:30",
+                    "difOctets": "0"
+                },
+                {
+                    "ifIndex": "4",
+                    "outOctets": "0",
+                    "ifPhysAddress": "",
+                    "inOctets": "0",
+                    "ifDescr": "58:48:43:32:30",
+                    "difOctets": "0"
+                },
+                {
+                    "ifIndex": "5",
+                    "outOctets": "1310101419",
+                    "ifPhysAddress": "00:32:75:95:e8:5d",
+                    "inOctets": "21915824",
+                    "ifDescr": "65:6e:30",
+                    "difOctets": "1288185595"
+                },
+                {
+                    "ifIndex": "6",
+                    "outOctets": "0",
+                    "ifPhysAddress": "00:32:75:95:e8:5d",
+                    "inOctets": "0",
+                    "ifDescr": "70:32:70:30",
+                    "difOctets": "0"
+                },
+                {
+                    "ifIndex": "7",
+                    "outOctets": "8960",
+                    "ifPhysAddress": "00:d3:8b:6f:57:73",
+                    "inOctets": "0",
+                    "ifDescr": "61:77:64:6c:30",
+                    "difOctets": "8960"
+                },
+                {
+                    "ifIndex": "8",
+                    "outOctets": "0",
+                    "ifPhysAddress": "00:00:07:f3:1a:e0",
+                    "inOctets": "0",
+                    "ifDescr": "65:6e:31",
+                    "difOctets": "0"
+                },
+                {
+                    "ifIndex": "9",
+                    "outOctets": "0",
+                    "ifPhysAddress": "00:00:07:f3:1a:e1",
+                    "inOctets": "0",
+                    "ifDescr": "65:6e:32",
+                    "difOctets": "0"
+                },
+                {
+                    "ifIndex": "10",
+                    "outOctets": "342",
+                    "ifPhysAddress": "00:00:07:f3:1a:e0",
+                    "inOctets": "0",
+                    "ifDescr": "62:72:69:64:67:65:30",
+                    "difOctets": "342"
+                },
+                {
+                    "ifIndex": "11",
+                    "outOctets": "200",
+                    "ifPhysAddress": "",
+                    "inOctets": "0",
+                    "ifDescr": "75:74:75:6e:30",
+                    "difOctets": "200"
+                }
+            ]
+        },
+        {
+            "dataConsulta": "2018-11-15",
+            "valoresInterfaces": [
+                {
+                    "ifIndex": "1",
+                    "outOctets": "653155462",
+                    "ifPhysAddress": "",
+                    "inOctets": "653155462",
+                    "ifDescr": "lo0",
+                    "difOctets": "0"
+                },
+                {
+                    "ifIndex": "2",
+                    "outOctets": "0",
+                    "ifPhysAddress": "",
+                    "inOctets": "0",
+                    "ifDescr": "gif0",
+                    "difOctets": "0"
+                },
+                {
+                    "ifIndex": "3",
+                    "outOctets": "0",
+                    "ifPhysAddress": "",
+                    "inOctets": "0",
+                    "ifDescr": "stf0",
+                    "difOctets": "0"
+                },
+                {
+                    "ifIndex": "4",
+                    "outOctets": "0",
+                    "ifPhysAddress": "",
+                    "inOctets": "0",
+                    "ifDescr": "XHC20",
+                    "difOctets": "0"
+                },
+                {
+                    "ifIndex": "5",
+                    "outOctets": "1315062783",
+                    "ifPhysAddress": "00:32:75:95:e8:5d",
+                    "inOctets": "228981739",
+                    "ifDescr": "en0",
+                    "difOctets": "1086081044"
+                },
+                {
+                    "ifIndex": "6",
+                    "outOctets": "0",
+                    "ifPhysAddress": "00:32:75:95:e8:5d",
+                    "inOctets": "0",
+                    "ifDescr": "p2p0",
+                    "difOctets": "0"
+                },
+                {
+                    "ifIndex": "7",
+                    "outOctets": "8960",
+                    "ifPhysAddress": "00:d3:8b:6f:57:73",
+                    "inOctets": "0",
+                    "ifDescr": "awdl0",
+                    "difOctets": "8960"
+                },
+                {
+                    "ifIndex": "8",
+                    "outOctets": "0",
+                    "ifPhysAddress": "00:00:07:f3:1a:e0",
+                    "inOctets": "0",
+                    "ifDescr": "en1",
+                    "difOctets": "0"
+                },
+                {
+                    "ifIndex": "9",
+                    "outOctets": "0",
+                    "ifPhysAddress": "00:00:07:f3:1a:e1",
+                    "inOctets": "0",
+                    "ifDescr": "en2",
+                    "difOctets": "0"
+                },
+                {
+                    "ifIndex": "10",
+                    "outOctets": "342",
+                    "ifPhysAddress": "00:00:07:f3:1a:e0",
+                    "inOctets": "0",
+                    "ifDescr": "bridge0",
+                    "difOctets": "342"
+                },
+                {
+                    "ifIndex": "11",
+                    "outOctets": "200",
+                    "ifPhysAddress": "",
+                    "inOctets": "0",
+                    "ifDescr": "utun0",
+                    "difOctets": "200"
+                }
+            ]
+        }
+    ],
     "portaAgente": "161",
     "ipAgente": "127.0.0.1"
 }]
