@@ -22,37 +22,35 @@ public class SingleAgentConsultant extends Thread{
     }
 
     public void run() {
-        List<InterfaceValues> ifValues = new ArrayList<>();
-        try {
-            //ifDescr_oid: 1.3.6.1.2.1.2.2.1.2 + nr interface
-            //ifPhysAddress_oid: 1.3.6.1.2.1.2.2.1.6 + nr interface
-            //inOctets_oid: 1.3.6.1.2.1.2.2.1.10 + nr interface
-            //outOctets_oid: 1.3.6.1.2.1.2.2.1.16 + nr interface
-            TransportMapping transport = new DefaultUdpTransportMapping();
-            this.snmp = new Snmp(transport);
-            transport.listen();
-            this.number_interfaces = Integer.parseInt(getAsString(new OID("1.3.6.1.2.1.2.1.0")));
-            InterfaceValues singIfValues;
-            for(int i = 1; i<=this.number_interfaces;i++) {
-                //getAll Variables and put it in to json
-                String ifIndex = String.valueOf(i);
-                String ifDescr =  getIfDescrAsString(new OID("1.3.6.1.2.1.2.2.1.2." + i));
-                String ifPhysAddress = getAsString(new OID("1.3.6.1.2.1.2.2.1.6." + i));
-                String inOctets = getAsString(new OID("1.3.6.1.2.1.2.2.1.10." + i));
-                String outOctets = getAsString(new OID("1.3.6.1.2.1.2.2.1.16." + i));
-                singIfValues = new InterfaceValues(ifIndex,ifDescr,ifPhysAddress,inOctets,outOctets);
-                ifValues.add(singIfValues);
+        while(true) {
+            List<InterfaceValues> ifValues = new ArrayList<>();
+            try {
+                TransportMapping transport = new DefaultUdpTransportMapping();
+                this.snmp = new Snmp(transport);
+                transport.listen();
+                this.number_interfaces = Integer.parseInt(getAsString(new OID("1.3.6.1.2.1.2.1.0")));
+                InterfaceValues singIfValues;
+                for(int i = 1; i<=this.number_interfaces;i++) {
+                    //getAll Variables and put it in to json
+                    String ifIndex = String.valueOf(i);
+                    String ifDescr =  getIfDescrAsString(new OID("1.3.6.1.2.1.2.2.1.2." + i));
+                    String ifPhysAddress = getAsString(new OID("1.3.6.1.2.1.2.2.1.6." + i));
+                    String inOctets = getAsString(new OID("1.3.6.1.2.1.2.2.1.10." + i));
+                    String outOctets = getAsString(new OID("1.3.6.1.2.1.2.2.1.16." + i));
+                    singIfValues = new InterfaceValues(ifIndex,ifDescr,ifPhysAddress,inOctets,outOctets);
+                    ifValues.add(singIfValues);
+                }
+
+                database_handler.writeToDatabase(ifValues,agente);
+            } catch(IOException ioe) {
+                System.out.println("Erro!");
             }
-
-            database_handler.writeToDatabase(ifValues,agente);
-        } catch(IOException ioe) {
-            System.out.println("Erro!");
+        try {
+            Thread.sleep(5000);
+        } catch(InterruptedException ie) {
+            System.out.println("INTERRUPTED!!");
         }
-
-        //Agora é retirar as infos todas!
-
-
-
+        }
     }
 
     private String getAsString(OID oid) throws IOException {
