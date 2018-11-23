@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.16.4",
+    "jsonfile": "^5.0.0",
     "net-snmp": "^1.2.4",
     "pug": "^2.0.3"
   }
