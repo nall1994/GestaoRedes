@@ -60,7 +60,7 @@ public class SNMPMonitor {
             Agente agente;
             switch(opcao) {
                 case 1:
-                    //executeAgents();
+                    executeAgents();
                     break;
                 case 2:
                     System.out.println("Tenha atenção que a correta inserção do ip e da porta do agente é da sua responsabilidade!");
@@ -77,10 +77,10 @@ public class SNMPMonitor {
                     System.out.println("Insira a porta onde o Agente a remover escuta:");
                     porta = s.nextLine();
                     agente = new Agente(ip,porta,0);
-                    //removeAgentFromConfigurationFile(agente);
+                    removeAgentFromConfigurationFile(agente);
                     break;
                 case 4:
-                    //listAgents();
+                    listAgents();
                     break;
                 case 5:
                     //mudar configuração de interface.
@@ -96,31 +96,30 @@ public class SNMPMonitor {
 
     }
 
-    /*private static void executeAgents() {
-        pastMenu = true;
+    private static void executeAgents() {
+        File file = new File( path_to_database + "agents.json");
         try {
-            FileReader fileReader = new FileReader(path_to_database);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            String line = null;
+            String content = FileUtils.readFileToString(file,"utf-8");
+            JSONArray infoAgentes = new JSONArray(content);
+            System.out.println("IP----------PORTA----------Número Interfaces");
             List<Agente> agentes = new ArrayList<>();
-            while((line = bufferedReader.readLine())!=null) {
-                String[] params = line.split(":");
-                Agente agente = new Agente(params[0],params[1]);
-                agentes.add(agente);
+            for(int i = 0; i < infoAgentes.length();i++) {
+                JSONObject agente = infoAgentes.getJSONObject(i);
+                Agente a = new Agente(agente.getString("ipAgente"),agente.getString("portaAgente"),Integer.parseInt(agente.getString("numInterfaces")));
+                agentes.add(a);
             }
-            bufferedReader.close();
 
             for(Agente a : agentes) {
-                System.out.println("Realizando consultas ao agente com ip: " + a.getIp() + " e porta: " + a.getPorta() + "....");
-                SingleAgentConsultant sac = new SingleAgentConsultant(a);
+                System.out.println("Consulting agent with IP:" + a.getIp() + " ; On port:" + a.getPorta());
+                SingleAgentConsultant sac = new SingleAgentConsultant(a,path_to_database);
                 sac.start();
             }
-        }catch(FileNotFoundException fnfe) {
-            System.out.println("Não foi possível encontrar o ficheiro de configuração!");
-        }catch(IOException ioe) {
-            System.out.println("Não foi possível ler do ficheiro de configuração!");
+
+        }catch(IOException ioex) {
+            System.out.println("could not read from agents's database file!");
         }
-    }*/
+
+    }
 
     private static void addAgentToConfigurationFile(Agente agente) {
         File file = new File(path_to_database + "agents.json");
@@ -175,38 +174,36 @@ public class SNMPMonitor {
             }
             FileUtils.writeStringToFile(file,newInfoAgentes.toString(4),"utf-8",false);
 
-            
+            File targetDirectory = new File(path_to_database + agente.getIp() + "_" + agente.getPorta());
+            if(targetDirectory.exists())
+                FileUtils.deleteDirectory(targetDirectory);
+
+            //File targetConfig = new File( "Database/config/" +  agente.getIp() + "_" + agente.getPorta() + "_interfaces.conf");
+            //FileUtils.forceDelete(targetConfig);
+            //Remoção do ficheiro dentro da pasta config nao está a funcionar
+
         }catch(IOException ioex){
             System.out.println("Could not read from agents's database file!");
         }
     }
 
-    /*
+
     private static void listAgents() {
+        File file = new File( path_to_database + "agents.json");
         try {
-            FileReader fileReader = new FileReader(path_to_config);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            System.out.println("---- Agentes no ficheiro de configuração ----");
-            String line = null;
-            int i = 1;
-            String[] params;
-            while((line = bufferedReader.readLine())!= null) {
-                params = line.split(":");
-                System.out.println("Agente " + i + " -> ip: " + params[0] + "; porta: " + params[1] );
-                i++;
+            String content = FileUtils.readFileToString(file,"utf-8");
+            JSONArray infoAgentes = new JSONArray(content);
+            System.out.println("IP----------PORTA----------Número Interfaces");
+            for(int i = 0; i < infoAgentes.length();i++) {
+                JSONObject agente = infoAgentes.getJSONObject(i);
+                System.out.println(agente.getString("ipAgente") + "---" + agente.getString("portaAgente") + "-------------" + agente.getString("numInterfaces"));
             }
-            System.out.println("\n");
-            bufferedReader.close();
-        } catch(FileNotFoundException fnfe) {
-            System.out.println("Não foi possível encontrar o ficheiro!");
-        } catch(IOException ioe) {
-            System.out.println("Não foi possível ler do ficheiro!");
+
+        }catch(IOException ioex) {
+            System.out.println("could not read from agents's database file!");
         }
-
-
-
     }
-*/
+
     private static String getAsString(OID oid, Agente agente) throws IOException {
         ResponseEvent event = get(new OID[] {oid},agente);
         if(event != null) {
