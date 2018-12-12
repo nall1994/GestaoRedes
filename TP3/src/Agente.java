@@ -1,10 +1,14 @@
+import java.util.ArrayList;
+
 public class Agente {
     private String porta;
     private String commun_snmp;
+    private ArrayList<String> imagens;
 
-    public Agente(String porta,String commun_snmp){
+    public Agente(String porta,String commun_snmp,ArrayList<String> imgs){
         this.porta = porta;
         this.commun_snmp=commun_snmp;
+        this.imagens=imgs;
     }
 
     public String getPorta() {
@@ -21,5 +25,13 @@ public class Agente {
 
     public void setCommun_snmp(String commun_snmp) {
         this.commun_snmp = commun_snmp;
+    }
+
+    public ArrayList<String> getImagens() {
+        return imagens;
+    }
+
+    public void setImagens(ArrayList<String> imagens) {
+        this.imagens = imagens;
     }
 }
