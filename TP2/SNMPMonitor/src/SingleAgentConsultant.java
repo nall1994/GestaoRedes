@@ -1,11 +1,11 @@
 import org.snmp4j.Snmp;
 
-public class SimpleAgentConsultant extends Thread {
+public class SingleAgentConsultant extends Thread {
     private Agente agente;
     private Snmp snmp;
     private JSONWriterAndReader database_handler;
 
-    public SimpleAgentConsultant(Agente agente) {
+    public SingleAgentConsultant(Agente agente) {
         this.agente = agente;
     }
 

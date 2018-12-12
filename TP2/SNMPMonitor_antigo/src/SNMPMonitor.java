@@ -6,6 +6,12 @@ import java.util.Scanner;
 import java.io.File;
 import org.json.*;
 import org.apache.commons.io.FileUtils;
+import org.snmp4j.CommunityTarget;
+import org.snmp4j.PDU;
+import org.snmp4j.Target;
+import org.snmp4j.event.ResponseEvent;
+import org.snmp4j.mp.SnmpConstants;
+import org.snmp4j.smi.*;
 
 public class SNMPMonitor {
     private static String path_to_database = "../Database/database.json";
@@ -204,8 +210,7 @@ public class SNMPMonitor {
         } catch(IOException ioe) {
             System.out.println("Não foi possível ler do ficheiro!");
         }
-
-
-
     }
+
+
 }
