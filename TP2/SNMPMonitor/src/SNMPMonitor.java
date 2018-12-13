@@ -20,7 +20,7 @@ import java.util.Scanner;
 
 public class SNMPMonitor {
 
-    private static String path_to_database = "../Database/";
+    private static String path_to_database = "Database/";
     private static boolean pastMenu = false;
     private static Snmp snmp;
 
@@ -83,7 +83,23 @@ public class SNMPMonitor {
                     listAgents();
                     break;
                 case 5:
-                    //mudar configuração de interface.
+                    System.out.println("Insira o IP do agente a remover:");
+                    ip = s.nextLine();
+                    System.out.println("Insira a porta onde o Agente escuta:");
+                    porta = s.nextLine();
+                    System.out.println("Selecione o indíce da interface que pretende mudar");
+                    String index = s.nextLine();
+                    System.out.println("Escreva o tipo de polling que quer: fixed ou dynamic");
+                    String type_of_poll = s.nextLine();
+                    if(type_of_poll.equals("fixed")) {
+                        System.out.println("Escreva o número de milisegundos entre consultas");
+                        String polling_time = s.nextLine();
+                        changeInterfaceConfig(ip,porta,index,type_of_poll,polling_time);
+                    } else {
+                        changeInterfaceConfig(ip,porta,index,type_of_poll,"");
+                    }
+
+                    break;
                 case 6:
                     System.exit(0);
                 default:
@@ -91,8 +107,6 @@ public class SNMPMonitor {
 
             }
         }
-
-        while(true);
 
     }
 
@@ -202,6 +216,39 @@ public class SNMPMonitor {
         }catch(IOException ioex) {
             System.out.println("could not read from agents's database file!");
         }
+    }
+
+    private static void changeInterfaceConfig(String ip, String porta, String ifIndex,String type_of_poll,String polling_time) {
+        File file = new File(path_to_database + "config/" + ip + "_" + porta + "_interfaces.config");
+        try{
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            String line = "";
+            List<String> lines_to_write = new ArrayList<>();
+            while((line = reader.readLine())!= null) {
+                String[] parts = line.split(":");
+                if(parts[0].equals(ifIndex)) {
+                    if(type_of_poll.equals("dynamic"))
+                        lines_to_write.add(ifIndex + ":" + type_of_poll);
+                    else lines_to_write.add(ifIndex + ":" + type_of_poll + ":" + polling_time);
+                } else {
+                    lines_to_write.add(line);
+                }
+            }
+            String content = "";
+            for(String s : lines_to_write)
+                content += s + "\n";
+            FileUtils.writeStringToFile(file,content,"utf-8",false);
+            //Aqui ainda não tem que estar sincronizado para escrever no ficheiro da interface porque as threads ainda não foram iniciadas
+            file = new File(path_to_database + ip + "_" + porta + "/interface" + ifIndex + ".json");
+            content = FileUtils.readFileToString(file,"utf-8");
+            JSONObject obj = new JSONObject(content);
+            if(type_of_poll.equals("dynamic")) obj.put("pollingTime","dynamic");
+            else obj.put("pollingTime",polling_time);
+            FileUtils.writeStringToFile(file,obj.toString(4),"utf-8",false);
+        } catch(IOException ioe) {
+            System.out.println("Couldn't read configuration file!");
+        }
+
     }
 
     private static String getAsString(OID oid, Agente agente) throws IOException {
