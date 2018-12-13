@@ -1,0 +1,40 @@
+extends layout
+block content
+    header.w3-container.w3-indigo
+        h2 Dados Tabulados
+    .w3-card-4
+        form.w3-container(action='/getConsultas', method='POST')
+            label.w3-teal
+                b Data Mínima
+            input.w3-input.w3-border.w3-light-grey(type='date' name='data')
+            label.w3-teal
+                b IP do Agente
+            input.w3-input.w3-border.w3-light-grey(type='text' name='ipAgente')
+            label.w3-teal
+                b Porta do Agente
+            input.w3-input.w3-border.w3-light-grey(type='text' name='portaAgente')
+            label.w3-teal
+                b Indíce da interface
+            input.w3-input.w3-border.w3-light-grey(type='text' name='ifIndex')
+            input.w3-btn.w3-indigo(type='submit' value='Apresentar Dados')
+    br
+    hr.w3-indigo
+    br
+    if dados
+        .w3-card-4
+            table.w3-table-all
+                tr
+                    th Agente
+                    th Indíce de Interface
+                    th Data de Consulta
+                    th inOctets
+                    th outOctets
+                    th difOctets
+                each consulta in dados
+                    tr
+                        td= consulta.agente
+                        td= consulta.ifIndex
+                        td= consulta.dataConsulta
+                        td= consulta.inOctets
+                        td= consulta.outOctets
+                        td= consulta.difOctets

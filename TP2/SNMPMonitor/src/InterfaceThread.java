@@ -40,10 +40,11 @@ public class InterfaceThread extends Thread {
             transport.listen();
 
             while(true) {
+                //Numa dada execução, os polling times dinâmicos começam sempre em 3000, ver se deve ser assim ou não!
                 String inOctets = getAsString(new OID("1.3.6.1.2.1.2.2.1.10." + this.ifIndex));
                 String outOctets = getAsString(new OID("1.3.6.1.2.1.2.2.1.16." + this.ifIndex));
                 long difOctets = Math.abs(Long.parseLong(outOctets) - Long.parseLong(inOctets));
-                File file = new File("Database/" + agente.getIp() + "_" + agente.getPorta() + "/interface" + this.ifIndex + ".json");
+                File file = new File("../Database/" + agente.getIp() + "_" + agente.getPorta() + "/interface" + this.ifIndex + ".json");
                 if(existsDifference(difOctets) && this.last_dif_value != -1) {
                     if((this.type_of_poll.equals("dynamic")) && (this.polling_time > 1000)) this.polling_time -= 500;
                     String content = FileUtils.readFileToString(file,"utf-8");

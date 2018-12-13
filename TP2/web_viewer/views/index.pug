@@ -1,0 +1,19 @@
+extends layout
+
+block content
+  .w3-card-4
+    header.w3-container.w3-indigo
+      h1(align="center") Visualizador de Dados do Monitor SNMP
+    .w3-container
+      h3.w3-text-blue.w3-center Como pretende visualizar os dados históricos?
+      ul.w3-ul.w3-border.w3-center
+        li.w3-hover-teal
+          a(href="http://localhost:3000/table_view") Ver dados em forma tabular
+        li.w3-hover-teal
+          a(href="http://localhost:3000/graphics_view") Ver dados em forma gráfica
+        li.w3-hover-teal
+          a(href="http://localhost:3000/interfaces_config") Configurar interfaces de um agente
+    br
+    hr.w3-indigo(style='height: 2px;')
+    br
+

@@ -1,0 +1,26 @@
+extends layout
+block content
+    header.w3-container.w3-indigo
+        h2 Configurar Interface
+    .w3-card-4
+        form.w3-container(action='/configInterface', method='POST')
+            label.w3-teal
+                b IP do Agente que possui a interface
+            input.w3-input.w3-border.w3-light-grey(type='text' name='ipAgente')
+            label.w3-teal
+                b Porta desse Agente
+            input.w3-input.w3-border.w3-light-grey(type='text' name='portaAgente')
+            label.w3-teal
+                b Indíce da interface
+            input.w3-input.w3-border.w3-light-grey(type='text' name='ifIndex')
+            br
+            select.w3-select.w3-border(name='pollingType')
+                option(value="" disabled selected) Escolha o tipo de polling
+                option(value="dynamic") dinâmico
+                option(value="fixed") fixo
+            br
+            br
+            label.w3-teal
+                b Tempo de polling (se escolheu fixo)
+            input.w3-input.w3-border.w3-light-grey(type='text', name='pollingTime')
+            input.w3-btn.w3-indigo(type='submit' value='Submeter Configuração')

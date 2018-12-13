@@ -15,7 +15,6 @@ public class SingleAgentConsultant extends Thread {
     private Agente agente;
     private String path_to_database;
     private Snmp snmp;
-    private JSONWriterAndReader database_handler;
 
     public SingleAgentConsultant(Agente agente, String path_to_database) {
         this.agente = agente; this.path_to_database = path_to_database;
@@ -72,7 +71,7 @@ public class SingleAgentConsultant extends Thread {
     }
 
     private ArrayList<String> extractPollingTimes() {
-        File file = new File( "Database/config/" + agente.getIp() + "_" + agente.getPorta() + "_interfaces.config");
+        File file = new File( "../Database/config/" + agente.getIp() + "_" + agente.getPorta() + "_interfaces.config");
         ArrayList<String> pollingTimes = new ArrayList<>();
         try{
             BufferedReader reader = new BufferedReader(new FileReader(file));

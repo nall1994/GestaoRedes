@@ -20,7 +20,7 @@ import java.util.Scanner;
 
 public class SNMPMonitor {
 
-    private static String path_to_database = "Database/";
+    private static String path_to_database = "../Database/";
     private static boolean pastMenu = false;
     private static Snmp snmp;
 
@@ -83,7 +83,7 @@ public class SNMPMonitor {
                     listAgents();
                     break;
                 case 5:
-                    System.out.println("Insira o IP do agente a remover:");
+                    System.out.println("Insira o IP do agente ao qual pertence a interface que quer configurar:");
                     ip = s.nextLine();
                     System.out.println("Insira a porta onde o Agente escuta:");
                     porta = s.nextLine();
@@ -192,8 +192,8 @@ public class SNMPMonitor {
             if(targetDirectory.exists())
                 FileUtils.deleteDirectory(targetDirectory);
 
-            //File targetConfig = new File( "Database/config/" +  agente.getIp() + "_" + agente.getPorta() + "_interfaces.conf");
-            //FileUtils.forceDelete(targetConfig);
+            File targetConfig = new File( "../Database/config/" +  agente.getIp() + "_" + agente.getPorta() + "_interfaces.config");
+            FileUtils.deleteQuietly(targetConfig);
             //Remoção do ficheiro dentro da pasta config nao está a funcionar
 
         }catch(IOException ioex){
@@ -238,13 +238,6 @@ public class SNMPMonitor {
             for(String s : lines_to_write)
                 content += s + "\n";
             FileUtils.writeStringToFile(file,content,"utf-8",false);
-            //Aqui ainda não tem que estar sincronizado para escrever no ficheiro da interface porque as threads ainda não foram iniciadas
-            file = new File(path_to_database + ip + "_" + porta + "/interface" + ifIndex + ".json");
-            content = FileUtils.readFileToString(file,"utf-8");
-            JSONObject obj = new JSONObject(content);
-            if(type_of_poll.equals("dynamic")) obj.put("pollingTime","dynamic");
-            else obj.put("pollingTime",polling_time);
-            FileUtils.writeStringToFile(file,obj.toString(4),"utf-8",false);
         } catch(IOException ioe) {
             System.out.println("Couldn't read configuration file!");
         }
