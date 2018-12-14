@@ -14,8 +14,8 @@ $(() => {
             url: 'http://localhost:3000/get_chart_data',
             data: formData,
             processData: false,
-            success: dados => drawCanvas(dados, chartZone),
-            error: e => alert('Erro ao desenhar gráfico: ' + e)
+            success: dados => drawCanvas(JSON.parse(JSON.stringify(dados))),
+            error: e => alert('Erro ao desenhar gráfico: ' + JSON.stringify(e))
         })
         $('#ipAgente').val('')
         $('#portaAgente').val('')
@@ -23,8 +23,23 @@ $(() => {
         $('#ifIndex').val('')
     }
 
-    function drawCanvas(dados, chartId) {
-            new Chart(chartId, {
+    function drawCanvas(dados) {
+        if($('#tipoInfo').val() == '1') {
+            new Chart(document.getElementById('chart'), {
+                type: 'line',
+                data: {
+                    labels: dados.labels,
+                    datasets: [dados.resultado]
+                },
+                options: {
+                    title:{
+                        display:true,
+                        text: 'Histórico de diferença de octetos para a interface ' + dados.ifDescr
+                    }
+                }
+            })
+        } else {
+            new Chart(document.getElementById('chart'), {
                 type: 'bar',
                 data: {
                     labels: dados.labels,
@@ -40,9 +55,18 @@ $(() => {
                     title: {
                         display:true,
                         text: 'Gráfico de informação do agente ' + dados.agente
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
                     }
                 }
             })
+        }
+            
     }
         
 })

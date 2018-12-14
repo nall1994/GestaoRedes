@@ -21,12 +21,15 @@ block content
                 label.w3-blue
                     b Tipo de informação no gráfico
                 select.w3-border(name='tipoInfo')
-                    option(value='1') Ver evolução de diferença de octetos
+                    option(value='1') Ver evolução da diferença média de octetos
                     option(value='2') Ver polling Time atual de cada interface
                 br
                 br
                 button.w3-btn.w3-indigo(id='drawChart') Desenhar Gráfico
     br
-    hr.w3-teal(style='height: 3px;')
+    hr.w3-indigo
+    a.w3-text-red(href='http://localhost:3000') Voltar à página principal
     br
-    canvas.w3-container.w3-center(id='chart' width='800' height='450')
+    hr.w3-indigo
+    br
+    canvas(id='chart' width='700' height='350')

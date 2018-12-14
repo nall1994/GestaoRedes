@@ -49,9 +49,101 @@ router.get('/graphics_view', (req,res) => {
 })
 
 router.post('/get_chart_data',(req,res) => {
-  
+  var form = formidable.IncomingForm()
+  form.parse(req,(erro,fields,files) => {
+    if(fields.tipoInfo == '1') {
+      //Isto está por dia! tentar pôr por hora depois!
+      var path_to_interface = "../Database/" + fields.ipAgente + "_" + fields.portaAgente + "/interface" + fields.ifIndex + ".json"
+      jsonfile.readFile(path_to_interface,"utf8",(erro,interface) => {
+      var per_day = separateByDay(fields.data,interface.consultas)
+      var per_day_average = calculateAverageOctets(per_day)
+      console.log(per_day)
+      res.jsonp(per_day)
+      }) 
+    } else {
+      var path_to_agents_json = "../Database/agents.json"
+      jsonfile.readFile(path_to_agents_json,"utf8",(erro,agentes) => {
+        if(!erro) {
+          var path_to_agent_interface= "../Database/" + fields.ipAgente + "_" + fields.portaAgente + "/interface"
+          var number_interfaces = 0
+          for(i in agentes) {
+            if(agentes[i].ipAgente == fields.ipAgente && agentes[i].portaAgente) {
+              number_interfaces = agentes[i].numInterfaces
+              break
+            }
+          }
+          var dados = new Object()
+          dados.labels = new Array()
+          dados.resultados = new Array()
+          dados.label = 'Polling Time por Interface'
+          dados.agente = fields.ipAgente + "_" + fields.portaAgente
+          var data = retrieveAllData(path_to_agent_interface,dados,number_interfaces)
+          console.log(data)
+          res.jsonp(data)
+        } else {
+          res.render('error', {message: 'Não foi possível carregar o ficheiro de agentes!'})
+        }
+      })
+    }
+  })
   //Ir buscar os dados necessários para desenhar o gráfico!
 })
+
+function calculateAverageOctets(per_day) {
+  //for(p in per_day)
+}
+
+function separateByDay(dataMinima,consultas) {
+  //Ver como fazer isto. Tem que estar [{data: [octets]}]
+  var octets_per_date = new Array()
+  dataMinima = new Date(dataMinima)
+  for(c in consultas) {
+    var data_str = consultas[c].dataConsulta.split("T")[0]
+    var data = new Date(data_str)
+    if(data.getTime() >= dataMinima.getTime()){
+      if(octets_per_date.some(obj => obj.hasOwnProperty(data_str))) {
+        octets_per_date = updateArray(octets_per_date,data_str, consultas[c].difOctets)
+      } else {
+        var temp = new Object()
+        temp[data_str] = [parseInt(consultas[c].difOctets)]
+        octets_per_date.push(temp)
+        console.log(octets_per_date)
+        //octets_per_date.push({data_str: [parseInt(consultas[c].difOctets)]})
+      }
+    }
+  }
+
+  function updateArray(octets_per_date,data_str,difOctets) {
+    //Aqui temos que verificar se o objecto corrente tem a chave que queremos!
+      octets_per_date[data_str] = octets_per_date[data_str].push(parseInt(difOctets))
+      return octets_per_date
+  }
+  /*var octets_per_date = new Object
+  dataMinima = new Date(dataMinima)
+    for(c in consultas) {
+      var data_str = consultas[c].dataConsulta.split("T")[0]
+      var data = new Date(data_str)
+      if(data.getTime() >= dataMinima.getTime()) {
+        if(data_str in octets_per_date) {
+            octets_per_date[data_str].push(parseInt(consultas[c].difOctets))
+        } else {
+          octets_per_date[data_str] = new Array() 
+          octets_per_date[data_str].push(parseInt(consultas[c].difOctets))
+        }
+      }
+    }*/
+    return octets_per_date
+}
+
+function retrieveAllData(path,dados,number_interfaces) {
+  for(i=1; i<= number_interfaces;i++) {
+    var path_aux = path + i + ".json"
+    var json_data = jsonfile.readFileSync(path_aux,"utf8")
+    dados.labels[i-1] = json_data.ifIndex
+    dados.resultados[i-1] = parseInt(json_data.pollingTime)
+  }
+  return dados
+}
 
 router.get('/interfaces_config',(req,res) => {
   res.render('config_view')

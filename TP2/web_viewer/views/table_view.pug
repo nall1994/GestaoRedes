@@ -1,7 +1,7 @@
 extends layout
 block content
     header.w3-container.w3-indigo
-        h2 Dados Tabulados
+        h2(align='center') Dados Tabulados
     .w3-card-4
         form.w3-container(action='/getConsultas', method='POST')
             label.w3-teal
@@ -17,6 +17,9 @@ block content
                 b Indíce da interface
             input.w3-input.w3-border.w3-light-grey(type='text' name='ifIndex')
             input.w3-btn.w3-indigo(type='submit' value='Apresentar Dados')
+    br
+    hr.w3-indigo
+    a.w3-text-red(href='http://localhost:3000') Voltar à página principal
     br
     hr.w3-indigo
     br
@@ -38,3 +41,5 @@ block content
                         td= consulta.inOctets
                         td= consulta.outOctets
                         td= consulta.difOctets
+    footer.w3-container.w3-indigo
+        h2(align='center') Network Management

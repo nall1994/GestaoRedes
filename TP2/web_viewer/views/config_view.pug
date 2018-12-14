@@ -1,7 +1,7 @@
 extends layout
 block content
     header.w3-container.w3-indigo
-        h2 Configurar Interface
+        h2(align='center') Configurar Interface
     .w3-card-4
         form.w3-container(action='/configInterface', method='POST')
             label.w3-teal
@@ -23,4 +23,9 @@ block content
             label.w3-teal
                 b Tempo de polling (se escolheu fixo)
             input.w3-input.w3-border.w3-light-grey(type='text', name='pollingTime')
-            input.w3-btn.w3-indigo(type='submit' value='Submeter Configuração')
+            input.w3-btn.w3-blue(type='submit' value='Submeter Configuração')
+        br
+        br
+        a.w3-text-red(href='http://localhost:3000') Voltar à página principal
+    footer.w3-container.w3-indigo
+        h2(align='center') Network Management
