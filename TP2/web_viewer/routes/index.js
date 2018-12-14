@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 var jsonfile = require('jsonfile')
 var fs = require('fs')
+var formidable = require('formidable')
+const chartjs = require('chart.js')
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -40,7 +42,15 @@ router.post('/getConsultas', (req,res) => {
 })
 
 router.get('/graphics_view', (req,res) => {
-  //mostrar página de gráficos (apresentar formulário de configuração)
+  // A cena dos gráficos secalhar vai ter que ser feita com um ficheiro
+  //javascript. Temos de apanhar um pedido submetido . fazer o post por ajax
+  // receber os dados e fazer o plot do gráfico!
+  res.render('graphic_view')
+})
+
+router.post('/get_chart_data',(req,res) => {
+  
+  //Ir buscar os dados necessários para desenhar o gráfico!
 })
 
 router.get('/interfaces_config',(req,res) => {

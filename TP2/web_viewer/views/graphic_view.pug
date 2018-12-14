@@ -1,0 +1,32 @@
+extends layout
+block content
+    header.w3-container.w3-indigo
+        h3(align='center') Visualizador dados em gráficos
+    .w3-container
+        form.w3-container(id='chartForm')
+            fieldset
+                legend.w3-teal Escolher parâmetros de gráfico
+                label.w3-blue
+                    b Ip do Agente
+                input.w3-input.w3-border.w3-light-grey(type='text' id='ipAgente' name='ipAgente')
+                label.w3-blue
+                    b Porta que o Agente escuta
+                input.w3-input.w3-border.w3-light-grey(type='text' id='portaAgente' name='portaAgente')
+                label.w3-blue
+                    b Data mínima de consulta
+                input.w3-input.w3-border.w3-light-grey(type='date' id='data' name='data')
+                label.w3-blue
+                    b Interface que pretende obter informação
+                input.w3-input.w3-border.w3-light-grey(type='text' id='ifIndex' name='ifIndex')
+                label.w3-blue
+                    b Tipo de informação no gráfico
+                select.w3-border(name='tipoInfo')
+                    option(value='1') Ver evolução de diferença de octetos
+                    option(value='2') Ver polling Time atual de cada interface
+                br
+                br
+                button.w3-btn.w3-indigo(id='drawChart') Desenhar Gráfico
+    br
+    hr.w3-teal(style='height: 3px;')
+    br
+    canvas.w3-container.w3-center(id='chart' width='800' height='450')
