@@ -361,6 +361,60 @@
             "inOctets": "0",
             "dataConsulta": "2018-12-13T16:15:12.084622100",
             "difOctets": "649940"
+        },
+        {
+            "outOctets": "1677609",
+            "inOctets": "0",
+            "dataConsulta": "2018-12-15T02:34:41.141928300",
+            "difOctets": "1677609"
+        },
+        {
+            "outOctets": "1677609",
+            "inOctets": "0",
+            "dataConsulta": "2018-12-15T02:34:44.158521800",
+            "difOctets": "1677609"
+        },
+        {
+            "outOctets": "1677609",
+            "inOctets": "0",
+            "dataConsulta": "2018-12-15T02:34:47.172461",
+            "difOctets": "1677609"
+        },
+        {
+            "outOctets": "1677609",
+            "inOctets": "0",
+            "dataConsulta": "2018-12-15T02:34:50.181414500",
+            "difOctets": "1677609"
+        },
+        {
+            "outOctets": "1678089",
+            "inOctets": "0",
+            "dataConsulta": "2018-12-15T02:34:53.207323400",
+            "difOctets": "1678089"
+        },
+        {
+            "outOctets": "1684303",
+            "inOctets": "0",
+            "dataConsulta": "2018-12-15T02:41:48.300801900",
+            "difOctets": "1684303"
+        },
+        {
+            "outOctets": "1684303",
+            "inOctets": "0",
+            "dataConsulta": "2018-12-15T02:41:51.428438200",
+            "difOctets": "1684303"
+        },
+        {
+            "outOctets": "1684303",
+            "inOctets": "0",
+            "dataConsulta": "2018-12-15T02:41:54.508201",
+            "difOctets": "1684303"
+        },
+        {
+            "outOctets": "1684783",
+            "inOctets": "0",
+            "dataConsulta": "2018-12-15T02:41:57.634840900",
+            "difOctets": "1684783"
         }
     ],
     "pollingTime": "3000",

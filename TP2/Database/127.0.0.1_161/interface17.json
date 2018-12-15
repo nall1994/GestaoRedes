@@ -361,6 +361,66 @@
             "inOctets": "117689934",
             "dataConsulta": "2018-12-13T16:15:11.580011600",
             "difOctets": "105735218"
+        },
+        {
+            "outOctets": "7262211",
+            "inOctets": "30087514",
+            "dataConsulta": "2018-12-15T02:34:40.945454",
+            "difOctets": "22825303"
+        },
+        {
+            "outOctets": "7262211",
+            "inOctets": "30087514",
+            "dataConsulta": "2018-12-15T02:34:43.954069300",
+            "difOctets": "22825303"
+        },
+        {
+            "outOctets": "7262211",
+            "inOctets": "30087514",
+            "dataConsulta": "2018-12-15T02:34:46.973992400",
+            "difOctets": "22825303"
+        },
+        {
+            "outOctets": "7262211",
+            "inOctets": "30087514",
+            "dataConsulta": "2018-12-15T02:34:49.999898200",
+            "difOctets": "22825303"
+        },
+        {
+            "outOctets": "7628439",
+            "inOctets": "30188344",
+            "dataConsulta": "2018-12-15T02:34:53.012841300",
+            "difOctets": "22559905"
+        },
+        {
+            "outOctets": "9365992",
+            "inOctets": "30778385",
+            "dataConsulta": "2018-12-15T02:41:47.933781500",
+            "difOctets": "21412393"
+        },
+        {
+            "outOctets": "9365992",
+            "inOctets": "30778385",
+            "dataConsulta": "2018-12-15T02:41:51.032497400",
+            "difOctets": "21412393"
+        },
+        {
+            "outOctets": "9365992",
+            "inOctets": "30778385",
+            "dataConsulta": "2018-12-15T02:41:54.087328900",
+            "difOctets": "21412393"
+        },
+        {
+            "outOctets": "9787137",
+            "inOctets": "30891100",
+            "dataConsulta": "2018-12-15T02:41:57.157115",
+            "difOctets": "21103963"
+        },
+        {
+            "outOctets": "9787137",
+            "inOctets": "30891100",
+            "dataConsulta": "2018-12-15T02:42:00.178037800",
+            "difOctets": "21103963"
         }
     ],
     "pollingTime": "3000",

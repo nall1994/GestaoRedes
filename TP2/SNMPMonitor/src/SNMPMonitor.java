@@ -235,8 +235,13 @@ public class SNMPMonitor {
                 }
             }
             String content = "";
-            for(String s : lines_to_write)
-                content += s + "\n";
+            for(int i = 0; i< lines_to_write.size();i++) {
+                if(i == lines_to_write.size() - 1) {
+                    content += lines_to_write.get(i);
+                } else {
+                    content += lines_to_write.get(i) + "\n";
+                }
+            }
             FileUtils.writeStringToFile(file,content,"utf-8",false);
         } catch(IOException ioe) {
             System.out.println("Couldn't read configuration file!");

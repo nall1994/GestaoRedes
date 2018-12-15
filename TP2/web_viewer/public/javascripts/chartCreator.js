@@ -34,7 +34,7 @@ $(() => {
                 options: {
                     title:{
                         display:true,
-                        text: 'Histórico de diferença de octetos para a interface ' + dados.ifDescr
+                        text: 'Histórico de diferença de octetos para a interface ' + dados.resultado.label
                     }
                 }
             })
@@ -46,6 +46,7 @@ $(() => {
                     datasets : [
                         {
                             label: dados.label,
+                            backgroundColor: dados.colors,
                             data: dados.resultados
                         }
                     ]

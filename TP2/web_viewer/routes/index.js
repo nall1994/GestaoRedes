@@ -52,13 +52,26 @@ router.post('/get_chart_data',(req,res) => {
   var form = formidable.IncomingForm()
   form.parse(req,(erro,fields,files) => {
     if(fields.tipoInfo == '1') {
-      //Isto está por dia! tentar pôr por hora depois!
       var path_to_interface = "../Database/" + fields.ipAgente + "_" + fields.portaAgente + "/interface" + fields.ifIndex + ".json"
       jsonfile.readFile(path_to_interface,"utf8",(erro,interface) => {
       var per_day = separateByDay(fields.data,interface.consultas)
       var per_day_average = calculateAverageOctets(per_day)
-      console.log(per_day)
-      res.jsonp(per_day)
+      dados = new Object()
+      dados.labels = new Array()
+      dados.resultado = new Object()
+      dados.resultado.data = new Array()
+      for(k in per_day_average) {
+        var pda = per_day_average[k]
+        for(key in pda) {
+          dados.labels.push(key)
+          dados.resultado.data.push(JSON.stringify(pda[key]))
+        } 
+      }
+      dados.resultado.label = interface.ifDescr
+      dados.resultado.borderColor = '#c45850'
+      dados.resultado.fill = false
+      console.log(dados)
+      res.jsonp(dados)
       }) 
     } else {
       var path_to_agents_json = "../Database/agents.json"
@@ -79,6 +92,8 @@ router.post('/get_chart_data',(req,res) => {
           dados.agente = fields.ipAgente + "_" + fields.portaAgente
           var data = retrieveAllData(path_to_agent_interface,dados,number_interfaces)
           console.log(data)
+          data.colors = new Array()
+          data.colors = getColors(dados.labels.length)
           res.jsonp(data)
         } else {
           res.render('error', {message: 'Não foi possível carregar o ficheiro de agentes!'})
@@ -89,12 +104,47 @@ router.post('/get_chart_data',(req,res) => {
   //Ir buscar os dados necessários para desenhar o gráfico!
 })
 
+function getColors(numberOfColors) {
+  var colors = ['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6', 
+  '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
+  '#80B300', '#809900', '#E6B3B3', '#6680B3', '#66991A', 
+  '#FF99E6', '#CCFF1A', '#FF1A66', '#E6331A', '#33FFCC',
+  '#66994D', '#B366CC', '#4D8000', '#B33300', '#CC80CC', 
+  '#66664D', '#991AFF', '#E666FF', '#4DB3FF', '#1AB399',
+  '#E666B3', '#33991A', '#CC9999', '#B3B31A', '#00E680', 
+  '#4D8066', '#809980', '#E6FF80', '#1AFF33', '#999933',
+  '#FF3380', '#CCCC00', '#66E64D', '#4D80CC', '#9900B3', 
+'#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF']
+  var returnColors = new Array
+  for(i = 0; i < numberOfColors; i++) {
+    var rand = Math.floor(Math.random() * 49)
+    returnColors.push(colors[rand])
+  }
+  return returnColors
+}
+
 function calculateAverageOctets(per_day) {
-  //for(p in per_day)
+  //per_day => [{data: [difOctets]}]
+  for(p in per_day) {
+    var obj = per_day[p]
+    for(property in obj) {
+      var difOctetsArray = obj[property]
+      obj[property] = calcAvg(difOctetsArray)
+    }
+    per_day[p] = obj
+  }
+  return per_day
+}
+
+function calcAvg(difOctetsArray) {
+  var sum = 0
+  for(i = 0; i < difOctetsArray.length; i++) {
+    sum += difOctetsArray[i]
+  }
+  return Math.round(sum/difOctetsArray.length)
 }
 
 function separateByDay(dataMinima,consultas) {
-  //Ver como fazer isto. Tem que estar [{data: [octets]}]
   var octets_per_date = new Array()
   dataMinima = new Date(dataMinima)
   for(c in consultas) {
@@ -107,33 +157,23 @@ function separateByDay(dataMinima,consultas) {
         var temp = new Object()
         temp[data_str] = [parseInt(consultas[c].difOctets)]
         octets_per_date.push(temp)
-        console.log(octets_per_date)
-        //octets_per_date.push({data_str: [parseInt(consultas[c].difOctets)]})
       }
     }
   }
+  return octets_per_date
+}
 
   function updateArray(octets_per_date,data_str,difOctets) {
-    //Aqui temos que verificar se o objecto corrente tem a chave que queremos!
-      octets_per_date[data_str] = octets_per_date[data_str].push(parseInt(difOctets))
+    for(o in octets_per_date) {
+      var obj = octets_per_date[o]
+      if(obj[''+data_str] != undefined) {
+        octets_per_date[o][''+data_str].push(parseInt(difOctets))
+      }
+    }
       return octets_per_date
   }
-  /*var octets_per_date = new Object
-  dataMinima = new Date(dataMinima)
-    for(c in consultas) {
-      var data_str = consultas[c].dataConsulta.split("T")[0]
-      var data = new Date(data_str)
-      if(data.getTime() >= dataMinima.getTime()) {
-        if(data_str in octets_per_date) {
-            octets_per_date[data_str].push(parseInt(consultas[c].difOctets))
-        } else {
-          octets_per_date[data_str] = new Array() 
-          octets_per_date[data_str].push(parseInt(consultas[c].difOctets))
-        }
-      }
-    }*/
-    return octets_per_date
-}
+
+
 
 function retrieveAllData(path,dados,number_interfaces) {
   for(i=1; i<= number_interfaces;i++) {
@@ -171,14 +211,18 @@ router.post('/configInterface',(req,res) => {
               lines_to_write[number_lines] = newline
               number_lines++
             } else {
-              lines_to_write[number_lines] = line
+              lines_to_write[number_lines] = line 
               number_lines++
             }
           })
           var write = ""
-          lines_to_write.forEach(function(line) {
-            write += line + "\n"
-          })
+          for(i = 0; i < lines_to_write.length;i++) {
+            if(i == lines_to_write.length - 1) {
+              write += lines_to_write[i]
+            } else {
+              write += lines_to_write[i] + "\n"
+            }
+          }
           fs.writeFile(path_to_config,write,"utf8", erro => {
             if(erro) res.render('error',{message: 'erro ao escrever no ficheiro de configuração'})
           })
@@ -199,9 +243,13 @@ router.post('/configInterface',(req,res) => {
             }
           })
           var write = ""
-          lines_to_write.forEach(function(line) {
-            write += line + "\n"
-          })
+          for(i = 0;i < lines_to_write.length;i++) {
+            if(i == lines_to_write.length - 1) {
+              write += lines_to_write[i]
+            } else {
+              write += lines_to_write[i] + "\n"
+            }
+          }
           fs.writeFile(path_to_config,write,"utf8", erro => {
             res.render('error',{message: 'erro ao escrever no ficheiro de configuração'})
           })

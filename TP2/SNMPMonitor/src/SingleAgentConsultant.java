@@ -66,7 +66,7 @@ public class SingleAgentConsultant extends Thread {
             }
 
         } catch(Exception e) {
-            System.out.println("couldn't connect snmp session!");
+            e.printStackTrace();
         }
     }
 
@@ -77,10 +77,10 @@ public class SingleAgentConsultant extends Thread {
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String line = "";
             while((line = reader.readLine()) != null) {
-                String[] parts = line.split(":");
-                if(parts[1].equals("dynamic"))
-                    pollingTimes.add("dynamic");
-                else pollingTimes.add(parts[2]);
+                    String[] parts = line.split(":");
+                    if(parts[1].equals("dynamic"))
+                        pollingTimes.add("dynamic");
+                    else pollingTimes.add(parts[2]);
             }
         } catch(FileNotFoundException fnfe) {
             System.out.println("The configuration file was not found!");

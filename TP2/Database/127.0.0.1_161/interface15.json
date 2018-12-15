@@ -361,6 +361,66 @@
             "inOctets": "0",
             "dataConsulta": "2018-12-13T16:15:11.730673900",
             "difOctets": "405308"
+        },
+        {
+            "outOctets": "1072735",
+            "inOctets": "0",
+            "dataConsulta": "2018-12-15T02:34:40.923512400",
+            "difOctets": "1072735"
+        },
+        {
+            "outOctets": "1072735",
+            "inOctets": "0",
+            "dataConsulta": "2018-12-15T02:34:43.936115",
+            "difOctets": "1072735"
+        },
+        {
+            "outOctets": "1072735",
+            "inOctets": "0",
+            "dataConsulta": "2018-12-15T02:34:46.954047800",
+            "difOctets": "1072735"
+        },
+        {
+            "outOctets": "1072735",
+            "inOctets": "0",
+            "dataConsulta": "2018-12-15T02:34:49.992917100",
+            "difOctets": "1072735"
+        },
+        {
+            "outOctets": "1072873",
+            "inOctets": "0",
+            "dataConsulta": "2018-12-15T02:34:53.004863800",
+            "difOctets": "1072873"
+        },
+        {
+            "outOctets": "1076693",
+            "inOctets": "0",
+            "dataConsulta": "2018-12-15T02:41:47.896880900",
+            "difOctets": "1076693"
+        },
+        {
+            "outOctets": "1076693",
+            "inOctets": "0",
+            "dataConsulta": "2018-12-15T02:41:51.206035100",
+            "difOctets": "1076693"
+        },
+        {
+            "outOctets": "1076693",
+            "inOctets": "0",
+            "dataConsulta": "2018-12-15T02:41:54.238919700",
+            "difOctets": "1076693"
+        },
+        {
+            "outOctets": "1076831",
+            "inOctets": "0",
+            "dataConsulta": "2018-12-15T02:41:57.260840600",
+            "difOctets": "1076831"
+        },
+        {
+            "outOctets": "1076831",
+            "inOctets": "0",
+            "dataConsulta": "2018-12-15T02:42:00.277769800",
+            "difOctets": "1076831"
         }
     ],
     "pollingTime": "3000",
