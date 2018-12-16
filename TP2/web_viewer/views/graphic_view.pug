@@ -16,11 +16,18 @@ block content
                     b Data mínima de consulta
                 input.w3-input.w3-border.w3-light-grey(type='date' id='data' name='data')
                 label.w3-blue
+                    b Forma de apresentação da diferença de octetos
+                select.w3-select.w3-border(id='tempUnit' name = 'tempUnit')
+                    option(value='1') Média de diferença de octetos por dia
+                    option(value='2') Média de diferença de octetos Por hora
+                    option(value='3') Diferença de octetos por Consulta
+                br
+                label.w3-blue
                     b Interface que pretende obter informação
                 input.w3-input.w3-border.w3-light-grey(type='text' id='ifIndex' name='ifIndex')
                 label.w3-blue
                     b Tipo de informação no gráfico
-                select.w3-border(id='tipoInfo' name='tipoInfo')
+                select.w3-select.w3-border(id='tipoInfo' name='tipoInfo')
                     option(value='1') Ver evolução da diferença média de octetos
                     option(value='2') Ver polling Time atual de cada interface
                 br

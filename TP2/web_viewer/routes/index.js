@@ -53,26 +53,71 @@ router.post('/get_chart_data',(req,res) => {
   form.parse(req,(erro,fields,files) => {
     if(fields.tipoInfo == '1') {
       var path_to_interface = "../Database/" + fields.ipAgente + "_" + fields.portaAgente + "/interface" + fields.ifIndex + ".json"
-      jsonfile.readFile(path_to_interface,"utf8",(erro,interface) => {
-      var per_day = separateByDay(fields.data,interface.consultas)
-      var per_day_average = calculateAverageOctets(per_day)
-      dados = new Object()
-      dados.labels = new Array()
-      dados.resultado = new Object()
-      dados.resultado.data = new Array()
-      for(k in per_day_average) {
-        var pda = per_day_average[k]
-        for(key in pda) {
-          dados.labels.push(key)
-          dados.resultado.data.push(JSON.stringify(pda[key]))
-        } 
-      }
-      dados.resultado.label = interface.ifDescr
-      dados.resultado.borderColor = '#c45850'
-      dados.resultado.fill = false
-      console.log(dados)
-      res.jsonp(dados)
-      }) 
+      if(fields.tempUnit == '1') {
+        jsonfile.readFile(path_to_interface,"utf8",(erro,interface) => {
+          var per_day = separateByDay(fields.data,interface.consultas)
+          var per_day_average = calculateAverageOctets(per_day)
+          dados = new Object()
+          dados.labels = new Array()
+          dados.resultado = new Object()
+          dados.resultado.data = new Array()
+          for(k in per_day_average) {
+            var pda = per_day_average[k]
+            for(key in pda) {
+              dados.labels.push(key)
+              dados.resultado.data.push(JSON.stringify(pda[key]))
+            } 
+          }
+          dados.resultado.label = interface.ifDescr
+          dados.resultado.borderColor = '#c45850'
+          dados.resultado.fill = false
+          console.log(dados)
+          res.jsonp(dados)
+          })
+      } else if(fields.tempUnit == '2') {
+        //Põr labels e resultados por hora!
+        jsonfile.readFile(path_to_interface,"utf8",(erro,interface) => {
+          //Tenho que separar as consultas por data e hora, espécie de per_day mas fico com o primeiro elementos da hora!
+          //Se fizer split por ":" e ir buscar o elemento 0 fico com isso!
+          var per_day_hour = separateByDayHour(fields.data, interface.consultas)
+          var per_day_hour_average = calculateAverageOctets(per_day_hour)
+          dados = new Object()
+          dados.labels = new Array()
+          dados.resultado = new Object()
+          dados.resultado.data = new Array()
+          for(k in per_day_hour_average) {
+            var pdha = per_day_hour_average[k]
+            for(key in pdha) {
+              dados.labels.push(key)
+              dados.resultado.data.push(JSON.stringify(pdha[key]))
+            }
+          }
+          dados.resultado.label = interface.ifDescr
+          dados.resultado.borderColor = '#c45850'
+          dados.resultado.fill = false
+          res.jsonp(dados)
+        })
+      } else {
+        jsonfile.readFile(path_to_interface,"utf8",(erro,interface) => {
+          var per_consulta = separatePerConsulta(fields.data,interface.consultas)
+          dados = new Object()
+          dados.labels = new Array()
+          dados.resultado = new Object()
+          dados.resultado.data = new Array()
+          console.log(per_consulta)
+          for(k in per_consulta) {
+            var pc = per_consulta[k]
+            for(key in pc) {
+              dados.labels.push(key)
+              dados.resultado.data.push(JSON.stringify(pc[key][0]))
+            }
+          }
+          dados.resultado.label = interface.ifDescr
+          dados.resultado.borderColor = '#c45850'
+          dados.resultado.fill = false
+          res.jsonp(dados)
+        })
+      }      
     } else {
       var path_to_agents_json = "../Database/agents.json"
       jsonfile.readFile(path_to_agents_json,"utf8",(erro,agentes) => {
@@ -91,7 +136,6 @@ router.post('/get_chart_data',(req,res) => {
           dados.label = 'Polling Time por Interface'
           dados.agente = fields.ipAgente + "_" + fields.portaAgente
           var data = retrieveAllData(path_to_agent_interface,dados,number_interfaces)
-          console.log(data)
           data.colors = new Array()
           data.colors = getColors(dados.labels.length)
           res.jsonp(data)
@@ -101,7 +145,6 @@ router.post('/get_chart_data',(req,res) => {
       })
     }
   })
-  //Ir buscar os dados necessários para desenhar o gráfico!
 })
 
 function getColors(numberOfColors) {
@@ -144,6 +187,26 @@ function calcAvg(difOctetsArray) {
   return Math.round(sum/difOctetsArray.length)
 }
 
+function separatePerConsulta(dataMinima,consultas) {
+  var octets_per_date = new Array()
+  dataMinima = new Date(dataMinima)
+  for(c in consultas) {
+    var date_parts = consultas[c].dataConsulta.split("T")
+    var data_for_comparing = new Date(date_parts[0])
+    var data_to_add = date_parts[0] + " " + date_parts[1].split(".")[0]
+    if(data_for_comparing.getTime() >= dataMinima) {
+      if(octets_per_date.some(obj => obj.hasOwnProperty(data_to_add))) {
+        octets_per_date = updateArray(octets_per_date,data_to_add,consultas[c].difOctets)
+      } else {
+        var temp = new Object()
+        temp[data_to_add] = [parseInt(consultas[c].difOctets)]
+        octets_per_date.push(temp)
+      }
+    }
+  }
+  return octets_per_date
+}
+
 function separateByDay(dataMinima,consultas) {
   var octets_per_date = new Array()
   dataMinima = new Date(dataMinima)
@@ -156,6 +219,25 @@ function separateByDay(dataMinima,consultas) {
       } else {
         var temp = new Object()
         temp[data_str] = [parseInt(consultas[c].difOctets)]
+        octets_per_date.push(temp)
+      }
+    }
+  }
+  return octets_per_date
+}
+
+function separateByDayHour(dataMinima,consultas) {
+  var octets_per_date = new Array()
+  dataMinima = new Date(dataMinima)
+  for(c in consultas) {
+    var data_for_comparing = new Date(consultas[c].dataConsulta.split("T")[0])
+    var data_to_add_str = consultas[c].dataConsulta.split("T")[0] + " " +  consultas[c].dataConsulta.split("T")[1].split(":")[0] + "H"
+    if(data_for_comparing.getTime() >= dataMinima.getTime()) {
+      if(octets_per_date.some(obj => obj.hasOwnProperty(data_to_add_str))) {
+        octets_per_date = updateArray(octets_per_date,data_to_add_str,consultas[c].difOctets)
+      } else {
+        var temp = new Object()
+        temp[data_to_add_str] = [parseInt(consultas[c].difOctets)]
         octets_per_date.push(temp)
       }
     }
