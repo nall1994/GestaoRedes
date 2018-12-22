@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="SNMPMonitor:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/SNMPMonitor_jar</output-path>
+    <root id="archive" name="SNMPMonitor.jar">
+      <element id="module-output" name="SNMPMonitor" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../libraries/commons-io-2.6/commons-io-2.6.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../libraries/snmp4j-3.0.0/dist/snmp4j-3.0.0.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
