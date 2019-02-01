@@ -7,9 +7,9 @@ import org.snmp4j.mp.SnmpConstants;
 import org.snmp4j.smi.*;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class InterfaceThread extends Thread {
     private int ifIndex;
@@ -41,6 +41,26 @@ public class InterfaceThread extends Thread {
 
             while(true) {
                 //Numa dada execução, os polling times dinâmicos começam sempre em 3000, ver se deve ser assim ou não!
+                // Aqui abrir o ficheiro de configuração para ver como é o tipo de poll e alterar as variáveis consoante isso!
+                File configFile = new File("../Database/config/" + agente.getIp() + "_" + agente.getPorta() + "_interfaces.config");
+                try {
+                    BufferedReader br = new BufferedReader(new FileReader(configFile));
+                    String line = "";
+                    while ((line = br.readLine()) != null) {
+                        String[] parts = line.split(":");
+                        if (Integer.parseInt(parts[0]) == this.ifIndex) {
+                            if (parts[1].equals("dynamic")) this.type_of_poll = "dynamic";
+                            else {
+                                this.type_of_poll = "fixed";
+                                this.polling_time = Integer.parseInt(parts[2]);
+                            }
+                            break;
+                        }
+                    }
+                    br.close();
+                } catch(FileNotFoundException fnfe) {
+                        System.out.println("File not found!!");
+                }
                 String inOctets = getAsString(new OID("1.3.6.1.2.1.2.2.1.10." + this.ifIndex));
                 String outOctets = getAsString(new OID("1.3.6.1.2.1.2.2.1.16." + this.ifIndex));
                 long difOctets = Math.abs(Long.parseLong(outOctets) - Long.parseLong(inOctets));
