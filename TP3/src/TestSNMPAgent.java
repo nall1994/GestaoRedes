@@ -34,9 +34,9 @@ public class TestSNMPAgent {
 
         // Register a system description, use one from you product environment
         // to test with
-        agent.registerManagedObject(MOCreator.createWriteRead(indexParam,"ubuntu:latest"));
-        agent.registerManagedObject(MOCreator.createWriteRead(nameParam,"terminal do ubuntu, ultima versao"));
-        agent.registerManagedObject(MOCreator.createWriteRead(flagParam,0));
+        agent.registerManagedObject(MOScalarCreator.createWriteRead(indexParam,"ubuntu:latest"));
+        agent.registerManagedObject(MOScalarCreator.createWriteRead(nameParam,"terminal do ubuntu, ultima versao"));
+        agent.registerManagedObject(MOScalarCreator.createWriteRead(flagParam,0));
 
         // Setup the client to use our newly started agent
         client = new SNMPManager("udp:127.0.0.1/"+agente.getPorta());

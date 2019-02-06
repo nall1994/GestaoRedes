@@ -10,7 +10,7 @@ import org.snmp4j.smi.Variable;
  *
  */
 
-public class MOCreator {
+public class MOScalarCreator {
     public static MOScalar createReadOnly(OID oid,Object value ){
         return new MOScalar(oid, MOAccessImpl.ACCESS_READ_ONLY, getVariable(value));
     }
