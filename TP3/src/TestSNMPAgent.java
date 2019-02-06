@@ -55,9 +55,9 @@ public class TestSNMPAgent {
         // Setup the client to use our newly started agent
         client = new SNMPManager("udp:127.0.0.1/"+agente.getPorta());
         //System.out.println(tabela_imagens.removeRow(new OID("1")));
-        //for(int i = 1; i <= images.size(); i++) {
-         //   System.out.println(tabela_imagens.);
-        //}
+        for(int i = 1; i <= images.size(); i++) {
+            System.out.println(client.getAsString(new OID("1.3.6.1.3.2019.2.1.1." + i)));
+        }
 
     }
 }
