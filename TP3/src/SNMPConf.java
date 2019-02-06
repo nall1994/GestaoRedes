@@ -1,6 +1,7 @@
 import java.io.*;
 
 public class SNMPConf {
+    private static int numberImages = 0;
     public static void main(String args[]){
         Agente agente = new Agente();
         getInfoConfig("configs/containership-conf.txt",agente);
@@ -8,7 +9,7 @@ public class SNMPConf {
         agente.prettyPrint();
         TestSNMPAgent testAgent = new TestSNMPAgent("udp:127.0.0.1/161");
         try {
-            testAgent.runAgent(agente);
+            testAgent.runAgent(agente,numberImages);
         }catch(IOException e){
             e.printStackTrace();
         }
@@ -65,6 +66,7 @@ public class SNMPConf {
             while((inputLine=br.readLine())!=null){
                 //System.out.println(inputLine);
                 toBeEdit.addImagens(inputLine);
+                numberImages++;
             }
 
             //
