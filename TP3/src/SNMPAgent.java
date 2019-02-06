@@ -1,30 +1,32 @@
-import org.snmp4j.agent.BaseAgent;
+import org.snmp4j.TransportMapping;
+import org.snmp4j.agent.*;
+import org.snmp4j.agent.mo.MOTableRow;
+import org.snmp4j.agent.mo.snmp.*;
+import org.snmp4j.agent.security.MutableVACM;
+import org.snmp4j.mp.MPv3;
+import org.snmp4j.security.*;
+import org.snmp4j.smi.*;
+import org.snmp4j.transport.TransportMappings;
 
+import java.io.File;
 import java.io.IOException;
 
 public class SNMPAgent extends BaseAgent {
-    private String Adress;
+    private String address;
 
-    public SNMPAgent(String Adress) throws IOException{
-
+    public SNMPAgent(String address) throws IOException{
         /**
-         * Cria um base agent com boot-counter, config file, e
-         * CommandProcessor para processar pedidos SNMP. Parameteros:
-         * "bootCounterFile" - a file with serialized boot-counter information (read/write)
-         * "configFile" - a file with serialized configuration information (read/write).
-         * "commandProcessor" - the CommandProcessor instance that handles the SNMP requests.
-         * Se os ficheiros não existirem, são criados no shutdown do agente
-         */
-        super(new File("conf.agent"), new File("bootCounter.agent"),
-                new CommandProcessor( new OctetString(MPv3.createLocalEngineID())));
+         * Creates a base agent with a DefaultMOServer as MOServer.
+         * (Podemos modificar a implementação do servidor)
+         **/
+        super(new File("../ageConfs/conf.agent"), new File("../ageConfs/bootCounter.agent"),
+                new CommandProcessor(new OctetString(MPv3.createLocalEngineID())));
         this.address = address;
     }
 
-
-
         /**
          * Adds community to security name mappings needed for SNMPv1 and SNMPv2c.
-         */
+         **/
     @Override
     protected void addCommunities(SnmpCommunityMIB communityMIB) {
 
@@ -38,17 +40,16 @@ public class SNMPAgent extends BaseAgent {
                 new Integer32(RowStatus.active) // row status
         };
 
-        MOTableRow row = communityMIB.getSnmpCommunityEntry().createRow(
+        MOTableRow row;
+        row = communityMIB.getSnmpCommunityEntry().createRow(new OctetString("public2public").toSubIndex(true), com2sec);
 
-        new OctetString("public2public").toSubIndex(true), com2sec);
-
-        communityMIB.getSnmpCommunityEntry().addRow(row);
+        communityMIB.getSnmpCommunityEntry().addRow((SnmpCommunityMIB.SnmpCommunityEntryRow) row);
 
     }
 
-        /**
-         * Adds initial notification targets and filters.
-         */
+    /**
+     * Adds initial notification targets and filters.
+     */
 
     @Override
     protected void addNotificationTargets(SnmpTargetMIB arg0, SnmpNotificationMIB arg1) {
@@ -97,7 +98,6 @@ public class SNMPAgent extends BaseAgent {
          */
 
     @Override
-
     protected void registerManagedObjects() {
         // TODO Auto-generated method stub
     }

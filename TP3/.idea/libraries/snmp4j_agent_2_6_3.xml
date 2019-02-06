@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="snmp4j-agent-2.6.3">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libraries/snmp4j-agent-2.6.3/dist/snmp4j-agent-2.6.3.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
