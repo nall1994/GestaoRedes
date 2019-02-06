@@ -82,6 +82,7 @@ public class SingleAgentConsultant extends Thread {
                         pollingTimes.add("dynamic");
                     else pollingTimes.add(parts[2]);
             }
+            reader.close();
         } catch(FileNotFoundException fnfe) {
             System.out.println("The configuration file was not found!");
         } catch(IOException ioe) {

@@ -32,7 +32,8 @@ public class SNMPMonitor {
         } catch(Exception ex) {
             System.out.println("couldn't connect snmp session!");
         }
-
+        File f = new File(path_to_database + "config/");
+        if(!f.exists()) f.mkdir();
         Scanner s = new Scanner(System.in);
         int opcao;
         while(true) {
@@ -138,16 +139,30 @@ public class SNMPMonitor {
     private static void addAgentToConfigurationFile(Agente agente) {
         File file = new File(path_to_database + "agents.json");
         try{
-            String content = FileUtils.readFileToString(file,"utf-8");
-            JSONArray infoAgentes = new JSONArray(content);
-            JSONObject newAgent = new JSONObject();
-            String numInterfaces = getAsString(new OID("1.3.6.1.2.1.2.1.0"),agente);
-            agente.setNumber_interfaces(Integer.parseInt(numInterfaces));
-            newAgent.put("ipAgente",agente.getIp());
-            newAgent.put("portaAgente",agente.getPorta());
-            newAgent.put("numInterfaces",String.valueOf(agente.getNumber_interfaces()));
-            infoAgentes.put(newAgent);
-            FileUtils.writeStringToFile(file,infoAgentes.toString(4),"utf-8",false);
+            if(file.exists()) {
+                String content = FileUtils.readFileToString(file,"utf-8");
+                JSONArray infoAgentes = new JSONArray(content);
+                JSONObject newAgent = new JSONObject();
+                String numInterfaces = getAsString(new OID("1.3.6.1.2.1.2.1.0"),agente);
+                agente.setNumber_interfaces(Integer.parseInt(numInterfaces));
+                newAgent.put("ipAgente",agente.getIp());
+                newAgent.put("portaAgente",agente.getPorta());
+                newAgent.put("numInterfaces",String.valueOf(agente.getNumber_interfaces()));
+                infoAgentes.put(newAgent);
+                FileUtils.writeStringToFile(file,infoAgentes.toString(4),"utf-8",false);
+            } else {
+                file.createNewFile();
+                JSONArray infoAgentes = new JSONArray();
+                JSONObject newAgent = new JSONObject();
+                String numInterfaces = getAsString(new OID("1.3.6.1.2.1.2.1.0"),agente);
+                agente.setNumber_interfaces(Integer.parseInt(numInterfaces));
+                newAgent.put("ipAgente",agente.getIp());
+                newAgent.put("portaAgente",agente.getPorta());
+                newAgent.put("numInterfaces",String.valueOf(agente.getNumber_interfaces()));
+                infoAgentes.put(newAgent);
+                FileUtils.writeStringToFile(file,infoAgentes.toString(4),"utf-8",false);
+            }
+
 
             //Agente adicionado ao ficheiro agents.json, criar a sua diretoria e ficheiros de configuração
             String path_to_this_agent = path_to_database + agente.getIp() + "_" + agente.getPorta();
@@ -234,6 +249,7 @@ public class SNMPMonitor {
                     lines_to_write.add(line);
                 }
             }
+            reader.close();
             String content = "";
             for(int i = 0; i< lines_to_write.size();i++) {
                 if(i == lines_to_write.size() - 1) {
