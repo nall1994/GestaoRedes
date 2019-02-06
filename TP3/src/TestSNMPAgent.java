@@ -10,9 +10,10 @@ public class TestSNMPAgent {
     static final OID indexParam = new OID("1.3.6.1.3.2019.1.1.0");
     static final OID nameParam = new OID("1.3.6.1.3.2019.1.2.0");
     static final OID flagParam = new OID("1.3.6.1.3.2019.1.3.0");
-    public static void main(String[] args) throws IOException {
-        TestSNMPAgent client = new TestSNMPAgent("udp:127.0.0.1/161");
-        client.init();
+
+
+    public void runAgent(Agente agente) throws IOException {
+        this.init(agente);
     }
 
         /**
@@ -23,8 +24,8 @@ public class TestSNMPAgent {
         address = add;
     }
 
-    private void init() throws IOException {
-        agent = new SNMPAgent("0.0.0.0/2001");
+    private void init(Agente agente) throws IOException {
+        agent = new SNMPAgent("0.0.0.0/" + agente.getPorta());
         agent.start();
         // Since BaseAgent registers some mibs by default we need to unregister
         // one before we register our own sysDescr. Normally you would
@@ -38,7 +39,7 @@ public class TestSNMPAgent {
         agent.registerManagedObject(MOCreator.createWriteRead(flagParam,0));
 
         // Setup the client to use our newly started agent
-        client = new SNMPManager("udp:127.0.0.1/2001");
+        client = new SNMPManager("udp:127.0.0.1/"+agente.getPorta());
         System.out.println(client.getAsString(indexParam));
         System.out.println(client.getAsString(nameParam));
         System.out.println(client.getAsString(flagParam));

@@ -6,6 +6,12 @@ public class SNMPConf {
         getInfoConfig("/Users/brunocarvalho/Documents/GR/GestaoRedes/TP3/configs/containership-conf.txt",agente);
         getInfoImages("/Users/brunocarvalho/Documents/GR/GestaoRedes/TP3/configs/containership-images.txt",agente);
         agente.prettyPrint();
+        TestSNMPAgent testAgent = new TestSNMPAgent("udp:127.0.0.1/161");
+        try {
+            testAgent.runAgent(agente);
+        }catch(IOException e){
+            e.printStackTrace();
+        }
     }
 
     /*

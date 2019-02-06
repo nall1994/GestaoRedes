@@ -1,4 +1,4 @@
-containerMIB DEFINITIONS ::= BEGIN
+CONTAINERMIB DEFINITIONS ::= BEGIN
 
 --
 -- Example MIB objects for agent module example implementations
@@ -8,28 +8,32 @@ containerMIB DEFINITIONS ::= BEGIN
 -- Imports para aquilo que iremos utilizar na definição da MIB
 --
 IMPORTS
-    MODULE-IDENTITY, OBJECT-TYPE, Integer32, experimental
+    MODULE-IDENTITY, OBJECT-TYPE, Integer32, experimental,
     NOTIFICATION-TYPE                       FROM SNMPv2-SMI
     SnmpAdminString                         FROM SNMP-FRAMEWORK-MIB
-    RowStatus, StorageType, DisplayString   FROM SNMPv2-TC
+    RowStatus, StorageType, DisplayString,
+    TruthValue                              FROM SNMPv2-TC
     InetAddressType, InetAddress            FROM INET-ADDRESS-MIB
 ;
 
 --
--- Tirar dúvida acerca do experimental! container é o nível mais alto
+-- Tirar dúvida acerca do experimental! containers é o nível mais alto
 --
 containers MODULE-IDENTITY
-    LAST-UPDATED "201812120000Z"
-    ORGANIZATION "www.uminho.pt"
+    LAST-UPDATED "201812121623Z" -- tem de ter REVISION com esta data!
+    ORGANIZATION "www.di.uminho.pt"
     CONTACT-INFO    
-          "email:    bmfd.carvalho@gmail.com"
+	 "postal:   Departamento de Informatica
+                Campus de Gualtar
+                4710-057 BRAGA
+                Portugal
+      email:    bmfs@di.uminho.pt"
     DESCRIPTION
-	"Rfid MIB module for TP3 project"
-    REVISION     "201812070000Z"
+	    "MIB objects for docker monitoring"
+    REVISION     "201812121623Z"  -- tem de ser igual a LAST-UPDATE!
     DESCRIPTION
-	"First draft"
-    REVISION "201812070000Z"
-    ::= { experimental 2018 }
+        "Primeira versao"
+    ::= { experimental 2019 }
 
 --
 -- Start of containershipParam - grupo com objetos que representam um container novo a ser criado!
@@ -39,12 +43,13 @@ containershipParam OBJECT IDENTIFIER ::= { containers 1 }
 
 -- Será colocado abaixo do containershipParam e indica o indicie da imagem a ser usada pelo container
 indexParam OBJECT-TYPE
-    SYNTAX      Integer32
+    SYNTAX      DisplayString
     MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION
-	"Identificador do indice da imagem a ser usada pelo container"
-    ::= { containershipParam 0 }
+	"Identificador do nome da imagem a ser usada pelo container"
+    ::= { containershipParam 1 }
+
 
 -- Será colocado abaixo do containershipParam e indica o nome do container a ser criado
 nomeParam OBJECT-TYPE
@@ -53,7 +58,7 @@ nomeParam OBJECT-TYPE
     STATUS      current
     DESCRIPTION
 	"Nome do container"
-    ::= { containershipParam 1 }
+    ::= { containershipParam 2 }
 
 --Será colocado abaixo do containershipParam e serve como uma flag
 --Após a ativação da flag  (sinalizando a criação do container) dever ser efetuado um reset a todos os objetos deste grupo
@@ -63,7 +68,16 @@ flagParam OBJECT-TYPE
     STATUS      current
     DESCRIPTION
 	"Flag do container"
-    ::= { containershipParam 2 }
+    ::= { containershipParam 3 }
+
+-- Será colocado abaixo do containershipParam e indica o indicie da imagem a ser usada pelo container
+indexIParam OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+	"Identificador do indice da imagem a ser usada pelo container"
+    ::= { containershipParam 4 }
 
 --
 -- End of containershipParam
@@ -78,7 +92,7 @@ containershipImageTable OBJECT-TYPE
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION
-	"A tabela contêm todas as imagens disponiveis, com duas colunas (indice de entrada) e nome da imagem"
+	"A tabela contem todas as imagens disponiveis, com duas colunas (indice de entrada) e nome da imagem"
     ::= { containers 2 }
 
 -- Necessário definir o tipo, cada objeto deste tipo representa uma entrada na tabela
@@ -88,14 +102,14 @@ IMAGETableEntry ::= SEQUENCE {
 }
 
 -- Um entrada na tabela, com a syntax que foi definida acima!
-ImageTableEntry OBJECT-TYPE
+imageTableEntry OBJECT-TYPE
     SYNTAX      IMAGETableEntry
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION
 	"Uma linha da tabela de imagens"
     INDEX   { indexImage }
-    ::= {containershipImageTable 0 }
+    ::= {containershipImageTable 1 }
 
 -- Chave da tabela, meramente para fazer indexação
 indexImage OBJECT-TYPE
@@ -104,7 +118,7 @@ indexImage OBJECT-TYPE
     STATUS      current
     DESCRIPTION
 	"Identificador da imagem (unico)"
-    ::= { ImageTableEntry 1 }
+    ::= { imageTableEntry 1 }
 
 -- Nome da imagem a ser utilizada no novo container
 image OBJECT-TYPE
@@ -113,7 +127,7 @@ image OBJECT-TYPE
     STATUS      current
     DESCRIPTION
 	"Nome da imagem"
-    ::= { ImageTableEntry 2 }
+    ::= { imageTableEntry 2 }
 
 
 --
@@ -128,20 +142,20 @@ containershipContainerTable OBJECT-TYPE
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION
-	"A tabela contêm os containers que foram criados, com quatro colunas: indice de entrada, nome do container, indice da imagem que o originou e o seu estado"
+	"A tabela contem os containers que foram criados, com quatro colunas- indice de entrada, nome do container, indice da imagem que o originou e o seu estado"
     ::= { containers 3 }
 
 --Necessário definir o tipo de cada entrada na tabela
 CONTAINERTableEntry ::= SEQUENCE {
-	indexContainer      Integer32,
-	contain_name	    DisplayString,
-    image_index         Integer32,
+    indexContainer      Integer32,
+    containName	        DisplayString,
+    imageIndex          Integer32,
     statusC             Integer32,
     processador         Integer32
 }
 
 -- Uma entrada na tabela, com a syntax já definida acima!
-ContainerTableEntry OBJECT-TYPE
+containerTableEntry OBJECT-TYPE
     SYNTAX      CONTAINERTableEntry
     MAX-ACCESS  not-accessible
     STATUS      current
@@ -157,25 +171,25 @@ indexContainer OBJECT-TYPE
     STATUS      current
     DESCRIPTION
 	"Indice de entrada na tabela"
-    ::= { ContainerTableEntry 1 }
+    ::= { containerTableEntry 1 }
 
 -- Define o nome do container referente à entrada deste
-contain_name OBJECT-TYPE
+containName OBJECT-TYPE
     SYNTAX      DisplayString
     MAX-ACCESS  read-only
     STATUS      current
     DESCRIPTION
 	"Nome do container"
-    ::= { ContainerTableEntry 2 }
+    ::= { containerTableEntry 2 }
 
 -- Define o indice em que esta se encontrava na tabela containershipImageTable
-image_index OBJECT-TYPE
+imageIndex OBJECT-TYPE
     SYNTAX      Integer32
     MAX-ACCESS  read-only
     STATUS      current
     DESCRIPTION
 	"Indice da imagem que originou o container"
-    ::= { ContainerTableEntry 3 }
+    ::= { containerTableEntry 3 }
 
 -- Representa o estado do container (up-1,down-2,removing-3,creating-4,changing-5)
 statusC OBJECT-TYPE
@@ -184,7 +198,7 @@ statusC OBJECT-TYPE
     STATUS      current
     DESCRIPTION
 	"Estado do container"
-    ::= { ContainerTableEntry 4 }
+    ::= { containerTableEntry 4 }
 
 -- Indica a percentagem de processador a ser utilizado
 processador OBJECT-TYPE
@@ -193,7 +207,7 @@ processador OBJECT-TYPE
     STATUS      current
     DESCRIPTION
 	"Percentagem de processador a ser utilizada"
-    ::= { ContainerTableEntry 5 }
+    ::= { containerTableEntry 5 }
 
 --
 -- End of containershipContainerTable
@@ -211,7 +225,7 @@ data OBJECT-TYPE
     STATUS      current
     DESCRIPTION
     "Data em que o agente foi criado"
-    ::= { status 0 }
+    ::= { status 1 }
 
 --
 -- END of status
