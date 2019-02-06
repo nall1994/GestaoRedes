@@ -3,8 +3,8 @@ import java.io.*;
 public class SNMPConf {
     public static void main(String args[]){
         Agente agente = new Agente();
-        getInfoConfig("/Users/brunocarvalho/Documents/GR/GestaoRedes/TP3/configs/containership-conf.txt",agente);
-        getInfoImages("/Users/brunocarvalho/Documents/GR/GestaoRedes/TP3/configs/containership-images.txt",agente);
+        getInfoConfig("configs/containership-conf.txt",agente);
+        getInfoImages("configs/containership-images.txt",agente);
         agente.prettyPrint();
         TestSNMPAgent testAgent = new TestSNMPAgent("udp:127.0.0.1/161");
         try {
