@@ -227,6 +227,14 @@ data OBJECT-TYPE
     "Data em que o agente foi criado"
     ::= { status 1 }
 
+contador OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-write
+    STATUS current
+    DESCRIPTION
+    "Número de containers criados neste agente até ao momento"
+    ::= { status 2 }
+
 --
 -- END of status
 --
