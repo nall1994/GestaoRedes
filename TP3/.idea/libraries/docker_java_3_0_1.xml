@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="docker-java-3.0.1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libraries/docker-java-3.0.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
