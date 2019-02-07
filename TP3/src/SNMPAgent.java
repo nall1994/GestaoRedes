@@ -93,10 +93,6 @@ public class SNMPAgent extends BaseAgent {
 
     }
 
-        /**
-         * Register additional managed objects at the agent's server.
-         */
-
     @Override
     protected void registerManagedObjects() {
         // TODO Auto-generated method stub
@@ -109,26 +105,14 @@ public class SNMPAgent extends BaseAgent {
         transportMappings[0] = tm;
     }
 
-        /**
-         * Start method invokes some initialization methods needed to start the agent
-         * @throws IOException
-         */
-
     public void start() throws IOException {
         init();
-        // This method reads some old config from a file and cause
-        // unexpected behavior.
-        // loadConfig(ImportModes.REPLACE_CREATE);
         addShutdownHook();
         getServer().addContext(new OctetString("public"));
         finishInit();
         run();
         sendColdStartNotification();
     }
-
-        /**
-         * Clients can register the MO they need
-         */
 
     public void registerManagedObject(ManagedObject mo) {
         try {

@@ -64,10 +64,21 @@ public class TestSNMPAgent {
                     printContainersMenu(client);
                     int containerIndex = scanner.nextInt();
                     //Ir buscar info da imagem com o containerIndex.
+                    String imagem_escolhida = client.getAsString(new OID("1.3.6.1.3.2019.2.1.1." + containerIndex));
+                    System.out.println("A criar container com a imagem: " + imagem_escolhida + ".....");
+                    client.setValueString(indexParam,imagem_escolhida);
+                    client.setValueString(nameParam,imagem_escolhida);
+                    client.setValueInt(indexIParam,containerIndex);
                     break;
                 case 2:
+                    String testeParam = client.getAsString(indexParam);
+                    int index_inTable = Integer.parseInt(client.getAsString(indexIParam));
+                    System.out.println("=============");
+                    System.out.println("Informações Atuais no container");
+                    System.out.println("Nome do Container: "+ testeParam + " com o indice "+ index_inTable +" na tabela de imagens.");
+                    System.out.println("=============");
                     //Pegar no container dos containerParam e criá-lo com o docker e adicionar à tabela
-                    // de containershipContainersTable
+                    //de containershipContainersTable
                     //Na função que faz isto temos que verificar se está algum container carregado.
                     //faz-se o getAsString do nameParam e se for "None" quer dizer que não está nada carregado.
                     break;

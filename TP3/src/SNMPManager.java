@@ -9,11 +9,7 @@ import org.snmp4j.mp.SnmpConstants;
 import org.snmp4j.security.SecurityModels;
 import org.snmp4j.security.SecurityProtocols;
 import org.snmp4j.security.USM;
-import org.snmp4j.smi.Address;
-import org.snmp4j.smi.GenericAddress;
-import org.snmp4j.smi.OID;
-import org.snmp4j.smi.OctetString;
-import org.snmp4j.smi.VariableBinding;
+import org.snmp4j.smi.*;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
 
 import java.io.IOException;
@@ -68,7 +64,40 @@ public class SNMPManager {
 
     public String getAsString(OID oid) throws IOException {
         ResponseEvent event = get(new OID[] { oid });
+        PDU resposta = event.getResponse();
         return event.getResponse().get(0).getVariable().toString();
+    }
+
+    public void setValueString(OID oid,String value) throws IOException{
+        ResponseEvent event = setString(oid, value);
+        PDU resposta = event.getResponse();
+        System.out.println("\nresponsePDU =" + resposta);
+    }
+
+    public void setValueInt(OID oid,int value) throws IOException{
+        ResponseEvent event = setInt(oid, value);
+        PDU resposta = event.getResponse();
+        System.out.println("\nresponsePDU =" + resposta);
+    }
+
+    public ResponseEvent setString(OID oid,String value) throws IOException{
+        PDU pdu = new PDU();
+        System.out.println(oid);
+        VariableBinding varBind = new VariableBinding(oid, new OctetString(value));
+        pdu.add(varBind);
+        pdu.setType(PDU.SET);
+
+        return snmp.set(pdu,getTarget());
+    }
+
+    public ResponseEvent setInt(OID oid,int value) throws IOException{
+        PDU pdu = new PDU();
+        System.out.println(oid);
+        VariableBinding varBind = new VariableBinding(oid, new Integer32(value));
+        pdu.add(varBind);
+        pdu.setType(PDU.SET);
+
+        return snmp.set(pdu,getTarget());
     }
 
 /**
