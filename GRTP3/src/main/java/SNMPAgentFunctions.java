@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -31,6 +32,8 @@ public class SNMPAgentFunctions {
     static final OID nameParam = new OID("1.3.6.1.3.2019.1.2.0");
     static final OID flagParam = new OID("1.3.6.1.3.2019.1.3.0");
     static final OID indexIParam = new OID("1.3.6.1.3.2019.1.4.0");
+    static final OID statusData = new OID("1.3.6.1.3.2019.4.1.0");
+    static final OID contadorContainers = new OID("1.3.6.1.3.2019.4.2.0");
 
     public SNMPManager getClient() {
         return this.client;
@@ -70,6 +73,8 @@ public class SNMPAgentFunctions {
         builder_containers_table.adicionarColuna(SMIConstants.SYNTAX_OCTET_STRING,MOAccessImpl.ACCESS_READ_WRITE);
         builder_containers_table.adicionarColuna(SMIConstants.SYNTAX_OCTET_STRING,MOAccessImpl.ACCESS_READ_WRITE);
 
+        agent.registerManagedObject(MOScalarCreator.createReadOnly(statusData, LocalDateTime.now().toString()));
+        agent.registerManagedObject(MOScalarCreator.createWriteRead(contadorContainers,0));
         agent.registerManagedObject(MOScalarCreator.createWriteRead(indexParam,"None"));
         agent.registerManagedObject(MOScalarCreator.createWriteRead(nameParam,"None"));
         agent.registerManagedObject(MOScalarCreator.createWriteRead(flagParam,0));
@@ -145,7 +150,9 @@ public class SNMPAgentFunctions {
                 result = "Tem que carregar os parâmetros de uma imagem primeiro!";
             } else {
                 int indexImage = Integer.parseInt(client.getAsString(indexIParam));
+                int numero_containers_criados = Integer.parseInt(client.getAsString(contadorContainers));
                 builder_containers_table.adicionarEntrada(containers_table,nomeContainer,indexImage,1,"0%","changing");
+                client.setValueInt(contadorContainers,numero_containers_criados+1);
                 client.setValueString(indexParam,"None");
                 client.setValueString(nameParam,"None");
                 client.setValueInt(indexIParam,0);
