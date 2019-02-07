@@ -17,7 +17,6 @@ public class MOScalarCreator {
 
     public static MOScalar createWriteRead(OID oid, Object value) {
         MOScalar novo = new MOScalar(oid, MOAccessImpl.ACCESS_READ_WRITE, getVariable(value));
-        System.out.println(novo.getAccess());
         return novo;
     }
 

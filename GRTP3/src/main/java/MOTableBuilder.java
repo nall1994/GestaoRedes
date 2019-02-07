@@ -2,16 +2,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.snmp4j.agent.MOAccess;
-import org.snmp4j.agent.mo.DefaultMOMutableRow2PC;
-import org.snmp4j.agent.mo.DefaultMOTable;
-import org.snmp4j.agent.mo.MOColumn;
-import org.snmp4j.agent.mo.MOMutableTableModel;
-import org.snmp4j.agent.mo.MOTable;
-import org.snmp4j.agent.mo.MOTableIndex;
-import org.snmp4j.agent.mo.MOTableSubIndex;
-import org.snmp4j.smi.OID;
-import org.snmp4j.smi.SMIConstants;
-import org.snmp4j.smi.Variable;
+import org.snmp4j.agent.mo.*;
+import org.snmp4j.smi.*;
 
 public class MOTableBuilder {
     private MOTableSubIndex[] subIndices = new MOTableSubIndex[] {new MOTableSubIndex(SMIConstants.SYNTAX_INTEGER)};
@@ -31,7 +23,9 @@ public class MOTableBuilder {
 
     public MOTableBuilder adicionarColuna(int syntax,MOAccess acesso) {
         contador_tipo_coluna++;
-        colunas.add(new MOColumn(contador_tipo_coluna,syntax,acesso));
+        MOColumn nova;
+        colunas.add(nova = new MOColumn(contador_tipo_coluna,syntax,acesso));
+        System.out.println(nova.getAccess());
         return this;
     }
 
@@ -58,7 +52,28 @@ public class MOTableBuilder {
             System.out.println("Linha " + i + " - " +variables[0].toString());
             i++;
         }
-        tabela.setVolatile(true);
+        tabela.setVolatile(false);
         return tabela;
+    }
+
+    public MOTable atualizarEstado(OID oid, int newState, MOTable tabela){
+        MOMutableTableModel modelo = (MOMutableTableModel) tabela.getModel();
+        Variable[] variables = new Variable[modelo.getRow(oid).size()];
+        for(int i=0;i<modelo.getRow(oid).size();i++){
+            variables[i] = modelo.getRow(oid).getValue(i);
+            System.out.println(variables[i]);
+        }
+        variables[2]= new Integer32(newState);
+        modelo.removeRow(oid);
+        modelo.addRow(new DefaultMOMutableRow2PC(oid,variables));
+        return tabela;
+    }
+
+    public void adicionarEntrada(MOTable tabela,String nomeParam,int indexI,int status, String cpu ){
+        MOMutableTableModel modelo = (MOMutableTableModel) tabela.getModel();
+        int nRows = modelo.getRowCount()+1;
+        Variable [] variables = new Variable[]{new OctetString(nomeParam),new Integer32(indexI),new Integer32(status), new OctetString(cpu)};
+        modelo.addRow(new DefaultMOMutableRow2PC(new OID(""+ nRows),variables));
+
     }
 }
