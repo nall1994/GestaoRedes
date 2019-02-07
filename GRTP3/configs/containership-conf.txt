@@ -1,0 +1,2 @@
+udp_port 6666
+community_string containership
