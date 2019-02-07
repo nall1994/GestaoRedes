@@ -81,6 +81,8 @@ public class SNMPAgent extends BaseAgent {
         vacm.addViewTreeFamily(new OctetString("fullReadView"), new OID("1.3"), new OctetString(),
                                     VacmMIB.vacmViewIncluded, StorageType.nonVolatile);
 
+        vacm.addViewTreeFamily(new OctetString("fullWriteView"),new OID("1.3.6.1.3.2019"),new OctetString(),VacmMIB.vacmViewIncluded,StorageType.nonVolatile);
+
     }
 
         /**

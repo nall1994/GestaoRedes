@@ -72,11 +72,16 @@ public class TestSNMPAgent {
                     break;
                 case 2:
                     String testeParam = client.getAsString(indexParam);
-                    int index_inTable = Integer.parseInt(client.getAsString(indexIParam));
-                    System.out.println("=============");
-                    System.out.println("Informações Atuais no container");
-                    System.out.println("Nome do Container: "+ testeParam + " com o indice "+ index_inTable +" na tabela de imagens.");
-                    System.out.println("=============");
+                    if(testeParam == "None") {
+                        System.out.println("Nenhum container está carregado!");
+                    } else {
+                        int index_inTable = Integer.parseInt(client.getAsString(indexIParam));
+                        System.out.println("=============");
+                        System.out.println("Informações Atuais no container");
+                        System.out.println("Nome do Container: "+ testeParam + " com o indice "+ index_inTable +" na tabela de imagens.");
+                        System.out.println("=============");
+                    }
+
                     //Pegar no container dos containerParam e criá-lo com o docker e adicionar à tabela
                     //de containershipContainersTable
                     //Na função que faz isto temos que verificar se está algum container carregado.
