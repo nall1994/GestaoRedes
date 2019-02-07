@@ -1,15 +1,17 @@
 import java.io.*;
 
-public class SNMPConf {
+public class SNMPAgentStarter {
     private static int numberImages = 0;
     public static void main(String args[]){
         Agente agente = new Agente();
         getInfoConfig("configs/containership-conf.txt",agente);
         getInfoImages("configs/containership-images.txt",agente);
         agente.prettyPrint();
-        TestSNMPAgent testAgent = new TestSNMPAgent("udp:127.0.0.1/161");
+        SNMPAgentFunctions testAgent = new SNMPAgentFunctions("udp:127.0.0.1/161");
         try {
             testAgent.runAgent(agente,numberImages);
+            ServerTester tester = new ServerTester(testAgent,numberImages);
+            tester.start();
         }catch(IOException e){
             e.printStackTrace();
         }
