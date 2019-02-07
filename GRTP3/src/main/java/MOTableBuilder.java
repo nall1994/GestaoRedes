@@ -61,7 +61,6 @@ public class MOTableBuilder {
         Variable[] variables = new Variable[modelo.getRow(oid).size()];
         for(int i=0;i<modelo.getRow(oid).size();i++){
             variables[i] = modelo.getRow(oid).getValue(i);
-            System.out.println(variables[i]);
         }
         variables[2]= new Integer32(newState);
         modelo.removeRow(oid);
@@ -69,10 +68,22 @@ public class MOTableBuilder {
         return tabela;
     }
 
-    public void adicionarEntrada(MOTable tabela,String nomeParam,int indexI,int status, String cpu ){
+    public MOTable atualizarID(OID oid, String ID, MOTable tabela) {
+        MOMutableTableModel modelo = (MOMutableTableModel) tabela.getModel();
+        Variable[] variables = new Variable[modelo.getRow(oid).size()];
+        for(int i = 0; i < modelo.getRow(oid).size();i++) {
+            variables[i] = modelo.getRow(oid).getValue(i);
+        }
+        variables[4] = new OctetString(ID);
+        modelo.removeRow(oid);
+        modelo.addRow(new DefaultMOMutableRow2PC(oid,variables));
+        return tabela;
+    }
+
+    public void adicionarEntrada(MOTable tabela,String nomeParam,int indexI,int status, String cpu,String id ){
         MOMutableTableModel modelo = (MOMutableTableModel) tabela.getModel();
         int nRows = modelo.getRowCount()+1;
-        Variable [] variables = new Variable[]{new OctetString(nomeParam),new Integer32(indexI),new Integer32(status), new OctetString(cpu)};
+        Variable [] variables = new Variable[]{new OctetString(nomeParam),new Integer32(indexI),new Integer32(status), new OctetString(cpu), new OctetString(id)};
         modelo.addRow(new DefaultMOMutableRow2PC(new OID(""+ nRows),variables));
 
     }

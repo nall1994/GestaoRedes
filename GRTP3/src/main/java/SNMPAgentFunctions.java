@@ -84,6 +84,43 @@ public class SNMPAgentFunctions {
 
     }
 
+    public String getCreatedContainers() {
+        String result = "";
+        try {
+            for (int i = 1; i<=nContainers;i++) {
+                String containerName = client.getAsString(new OID("1.3.6.1.3.2019.3.1.1." + i));
+                String containerID = client.getAsString(new OID("1.3.6.1.3.2019.3.1.5." + i));
+                if(i < nContainers) {
+                    result += containerName + " -> " + containerID + "\n";
+                } else {
+                    result += containerName + " -> " + containerID;
+                }
+
+            }
+        }catch(IOException ex) {
+            result = "Ocorreu uma exceção! Tente novamente!";
+        }
+        return result;
+    }
+
+    public String removeContainer(int container_index) {
+        String result = "";
+        try {
+            String containerID = client.getAsString(new OID("1.3.6.1.3.2019.3.1.5." + container_index));
+            ProcessBuilder pb = new ProcessBuilder("docker","container","stop",containerID);
+            pb.redirectErrorStream(true);
+            Process p = pb.start();
+            ProcessBuilder pb2 = new ProcessBuilder("docker","container","rm",containerID);
+            pb2.redirectErrorStream(true);
+            Process p2 = pb2.start();
+            result = "Container com ID: " + containerID + " removido com sucesso!";
+        }catch(IOException e) {
+            result = "Ocorreu uma exceção! Tente novamente!";
+        }
+
+        return result;
+    }
+
     public String loadParameters(int image_index) {
         String returnResult = "";
         try {

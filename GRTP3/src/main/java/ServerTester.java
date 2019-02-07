@@ -41,6 +41,13 @@ public class ServerTester extends Thread {
                     System.out.println(result);
                     break;
                 case 4:
+                    //remover container
+                    String createdContainers = agent_functions.getCreatedContainers();
+                    printCreatedContainersMenu(createdContainers);
+                    escolha = scanner.nextInt();
+                    result = agent_functions.removeContainer(escolha);
+                    System.out.println(result);
+                case 5:
                     terminate = true;
                     break;
                 default:
@@ -56,7 +63,9 @@ public class ServerTester extends Thread {
         System.out.println("Escolha a sua opção (1,2 ou 3):");
         System.out.println("1 - Carregar parâmetros de um container.");
         System.out.println("2 - Criar o container carregado.");
-        System.out.println("3 - Sair do sistema.");
+        System.out.println("3 - Listar containers criados.");
+        System.out.println("4 - Desligar e remover um container.");
+        System.out.println("5 - Terminar aplicação gestora.");
     }
 
     private void printContainersMenu() {
@@ -67,6 +76,14 @@ public class ServerTester extends Thread {
             }
         } catch(IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void printCreatedContainersMenu(String createdContainers) {
+        String[] perContainer = createdContainers.split("\n");
+        System.out.println("Escolha o container que quer remover:");
+        for(int i = 0; i < perContainer.length; i++) {
+            System.out.println(i+1 + " - " + perContainer[i]);
         }
     }
 }
