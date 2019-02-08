@@ -307,13 +307,14 @@ public class SNMPAgentFunctions {
     private String verificarContainers() throws IOException{
         int nContainers = Integer.parseInt(client.getAsString(contadorContainers));
         String nomeCont = "";
+        String idCont = "";
         int status = 0;
         String statusTo = "";
         String novaString = "Container: ";
-        String toBePassed= "";
-        System.out.println("\n Lista de Containers:");
+        String toBePassed= "\n Lista de Containers:\n";
         for(int i =0; i< nContainers;i++){
              nomeCont= client.getAsString(new OID("1.3.6.1.3.2019.3.1.1."+(i+1)));
+             idCont = client.getAsString(new OID("1.3.6.1.3.2019.3.1.5." + (i+1)));
              status = Integer.parseInt(client.getAsString(new OID("1.3.6.1.3.2019.3.1.3."+(i+1))));
              if (status == 1){
                 statusTo = "creating";
@@ -326,12 +327,10 @@ public class SNMPAgentFunctions {
              }else if(status == 5){
                  statusTo = "removing";
              }
-             toBePassed = toBePassed + novaString + nomeCont + " ---- Status: " + statusTo;
-             System.out.println(toBePassed);
-             toBePassed="";
+             toBePassed = toBePassed + novaString + nomeCont + "(" + idCont + ") ---- Status: " + statusTo + "\n";
         }
-        String sucesso = "Operação concluída com sucesso";
-        return sucesso;
+        toBePassed += "\nOperação concluída com sucesso";
+        return toBePassed;
     }
 
 }
