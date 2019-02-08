@@ -48,6 +48,22 @@ public class ServerTester extends Thread {
                     result = agent_functions.removeContainer(escolha);
                     System.out.println(result);
                 case 5:
+                    //iniciar container
+                    createdContainers = agent_functions.getCreatedContainers();
+                    printCreatedContainersMenu(createdContainers);
+                    escolha = scanner.nextInt();
+                    result = agent_functions.startContainer(escolha);
+                    System.out.println(result);
+                    break;
+                case 6:
+                    //parar container
+                    createdContainers = agent_functions.getCreatedContainers();
+                    printCreatedContainersMenu(createdContainers);
+                    escolha = scanner.nextInt();
+                    result = agent_functions.stopContainer(escolha);
+                    System.out.println(result);
+                    break;
+                case 7:
                     terminate = true;
                     break;
                 default:
@@ -65,7 +81,9 @@ public class ServerTester extends Thread {
         System.out.println("2 - Criar o container carregado.");
         System.out.println("3 - Listar containers criados.");
         System.out.println("4 - Desligar e remover um container.");
-        System.out.println("5 - Terminar aplicação gestora.");
+        System.out.println("5 - Iniciar container.");
+        System.out.println("6 - Parar container.");
+        System.out.println("7 - Terminar aplicação gestora.");
     }
 
     private void printContainersMenu() {

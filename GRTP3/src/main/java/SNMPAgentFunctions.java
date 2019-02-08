@@ -123,6 +123,12 @@ public class SNMPAgentFunctions {
     }
 
     public String removeContainer(int container_index) {
+        try {
+            int containerState = Integer.parseInt(client.getAsString(new OID("1.3.6.1.3.2019.3.1.3." + container_index)));
+            if(containerState == 2) return "Este container está a ser alterado atualmente! Tente novamente mais tarde!";
+        } catch(IOException e) {
+            return "Uma exceção ocorreu! Tente novamente por favor";
+        }
         double time = Chrono.stop();
         if(time >= 60.0) {
             requests = 1;
@@ -136,12 +142,15 @@ public class SNMPAgentFunctions {
         String result = "";
         try {
             String containerID = client.getAsString(new OID("1.3.6.1.3.2019.3.1.5." + container_index));
+            builder_containers_table.atualizarEstado(new OID(""+ container_index),2,containers_table);//changing
             ProcessBuilder pb = new ProcessBuilder("docker","container","stop",containerID);
             pb.redirectErrorStream(true);
             Process p = pb.start();
+            builder_containers_table.atualizarEstado(new OID(""+ container_index),5,containers_table);//removing
             ProcessBuilder pb2 = new ProcessBuilder("docker","container","rm",containerID);
             pb2.redirectErrorStream(true);
             Process p2 = pb2.start();
+            builder_containers_table.removerLinha(new OID("" + container_index),containers_table);
             result = "Container com ID: " + containerID + " removido com sucesso!";
         }catch(IOException e) {
             result = "Ocorreu uma exceção! Tente novamente!";
@@ -173,6 +182,44 @@ public class SNMPAgentFunctions {
         }
 
         return returnResult;
+    }
+
+    public String startContainer(int container_index) {
+        try {
+            int containerState = Integer.parseInt(client.getAsString(new OID("1.3.6.1.3.2019.3.1.3." + container_index)));
+            if(containerState == 2) return "Este container está a ser alterado atualmente! Tente novamente mais tarde!";
+        } catch(IOException e) {
+            return "Uma exceção ocorreu! Tente novamente por favor";
+        }
+        try {
+            builder_containers_table.atualizarEstado(new OID(""+ container_index),2,containers_table);//changing
+            String containerID = client.getAsString(new OID("1.3.6.1.3.2019.3.1.5." + container_index));
+            ProcessBuilder pb = new ProcessBuilder("docker","run","--detach",containerID);
+            Process p = pb.start();
+            builder_containers_table.atualizarEstado(new OID(""+ container_index),3,containers_table);//up
+            return "Container com ID: " + containerID + " iniciado com sucesso!";
+        }catch(IOException e) {
+            return("Uma exceção ocorreu! Tente novamente por favor!");
+        }
+    }
+
+    public String stopContainer(int container_index) {
+        try {
+            int containerState = Integer.parseInt(client.getAsString(new OID("1.3.6.1.3.2019.3.1.3." + container_index)));
+            if(containerState == 2) return "Este container está a ser alterado atualmente! Tente novamente mais tarde!";
+        } catch(IOException e) {
+            return "Uma exceção ocorreu! Tente novamente por favor";
+        }
+        try {
+            builder_containers_table.atualizarEstado(new OID(""+ container_index),2,containers_table);//changing
+            String containerID = client.getAsString(new OID("1.3.6.1.3.2019.3.1.5." + container_index));
+            ProcessBuilder pb = new ProcessBuilder("docker","stop",containerID);
+            Process p = pb.start();
+            builder_containers_table.atualizarEstado(new OID(""+ container_index),4,containers_table);//down
+            return "Container com ID: " + containerID + " parado com sucesso!";
+        }catch(IOException e) {
+            return("Uma exceção ocorreu! Tente novamente por favor!");
+        }
     }
 
     public String create() {

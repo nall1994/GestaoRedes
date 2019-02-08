@@ -65,6 +65,11 @@ public class MOTableBuilder {
         return tabela;
     }
 
+    public void removerLinha(OID oid,MOTable tabela) {
+        MOMutableTableModel modelo = (MOMutableTableModel) tabela.getModel();
+        modelo.removeRow(oid);
+    }
+
     public MOTable atualizarID(OID oid, String ID, MOTable tabela) {
         MOMutableTableModel modelo = (MOMutableTableModel) tabela.getModel();
         Variable[] variables = new Variable[modelo.getRow(oid).size()];
