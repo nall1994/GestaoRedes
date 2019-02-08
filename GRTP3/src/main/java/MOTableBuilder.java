@@ -25,7 +25,6 @@ public class MOTableBuilder {
         contador_tipo_coluna++;
         MOColumn nova;
         colunas.add(nova = new MOColumn(contador_tipo_coluna,syntax,acesso));
-        System.out.println(nova.getAccess());
         return this;
     }
 
@@ -48,8 +47,6 @@ public class MOTableBuilder {
         int i = 1;
         for(Variable[] variables : linhas) {
             modelo.addRow(new DefaultMOMutableRow2PC(new OID(String.valueOf(i)),variables));
-            System.out.println(modelo.getRow(new OID("1")));
-            System.out.println("Linha " + i + " - " +variables[0].toString());
             i++;
         }
         tabela.setVolatile(false);
