@@ -305,18 +305,33 @@ public class SNMPAgentFunctions {
     }
 
     private String verificarContainers() throws IOException{
-        ProcessBuilder builder = new ProcessBuilder("docker","ps","-a");
-        builder.redirectErrorStream(true);
-        Process p = builder.start();
-        BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
-        String line;
-        String result = "";
-        while (true){
-            line = r.readLine();
-            if(line==null) break;
-            result += line + "\n";
+        int nContainers = Integer.parseInt(client.getAsString(contadorContainers));
+        String nomeCont = "";
+        int status = 0;
+        String statusTo = "";
+        String novaString = "Container: ";
+        String toBePassed= "";
+        System.out.println("\n Lista de Containers:");
+        for(int i =0; i< nContainers;i++){
+             nomeCont= client.getAsString(new OID("1.3.6.1.3.2019.3.1.1."+(i+1)));
+             status = Integer.parseInt(client.getAsString(new OID("1.3.6.1.3.2019.3.1.3."+(i+1))));
+             if (status == 1){
+                statusTo = "creating";
+             }else if (status == 2){
+                 statusTo = "changing";
+             }else if (status == 3){
+                 statusTo = "up";
+             }else if(status == 4){
+                 statusTo = "down";
+             }else if(status == 5){
+                 statusTo = "removing";
+             }
+             toBePassed = toBePassed + novaString + nomeCont + " ---- Status: " + statusTo;
+             System.out.println(toBePassed);
+             toBePassed="";
         }
-        return result;
+        String sucesso = "Operação concluída com sucesso";
+        return sucesso;
     }
 
 }

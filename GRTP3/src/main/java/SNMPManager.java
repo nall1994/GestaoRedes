@@ -69,18 +69,15 @@ public class SNMPManager {
     public void setValueString(OID oid,String value) throws IOException{
         ResponseEvent event = setString(oid, value);
         PDU resposta = event.getResponse();
-        System.out.println("\nresponsePDU =" + resposta);
     }
 
     public void setValueInt(OID oid,int value) throws IOException{
         ResponseEvent event = setInt(oid, value);
         PDU resposta = event.getResponse();
-        System.out.println("\nresponsePDU =" + resposta);
     }
 
     public ResponseEvent setString(OID oid,String value) throws IOException{
         PDU pdu = new PDU();
-        System.out.println(oid);
         VariableBinding varBind = new VariableBinding(oid, new OctetString(value));
         pdu.add(varBind);
         pdu.setType(PDU.SET);
@@ -90,7 +87,6 @@ public class SNMPManager {
 
     public ResponseEvent setInt(OID oid,int value) throws IOException{
         PDU pdu = new PDU();
-        System.out.println(oid);
         VariableBinding varBind = new VariableBinding(oid, new Integer32(value));
         pdu.add(varBind);
         pdu.setType(PDU.SET);
