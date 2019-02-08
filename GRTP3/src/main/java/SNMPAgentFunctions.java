@@ -23,6 +23,8 @@ public class SNMPAgentFunctions {
     public SNMPManager client = null;
     public String address;
     private int numberImages;
+    private int requests = 0;
+    private static final int MAX_REQUESTS_PER_MINUTE = 120;
     private int nContainers;
     private MOTableBuilder builder_images_table;
     private MOTableBuilder builder_containers_table;
@@ -42,6 +44,8 @@ public class SNMPAgentFunctions {
     public void runAgent(Agente agente, int numberImages) throws IOException {
         this.numberImages = numberImages;
         this.init(agente);
+        requests = 0;
+        Chrono.start();
     }
 
         /**
@@ -90,6 +94,16 @@ public class SNMPAgentFunctions {
     }
 
     public String getCreatedContainers() {
+        double time = Chrono.stop();
+        if(time >= 60.0) {
+            requests = 1;
+            Chrono.start();
+        } else {
+            requests++;
+            if(requests >= MAX_REQUESTS_PER_MINUTE) {
+                return "Capacidade do servidor excedida, espere um pouco para submeter o pedido novamente!";
+            }
+        }
         String result = "";
         try {
             for (int i = 1; i<=nContainers;i++) {
@@ -109,6 +123,16 @@ public class SNMPAgentFunctions {
     }
 
     public String removeContainer(int container_index) {
+        double time = Chrono.stop();
+        if(time >= 60.0) {
+            requests = 1;
+            Chrono.start();
+        } else {
+            requests++;
+            if(requests >= MAX_REQUESTS_PER_MINUTE) {
+                return "Capacidade do servidor excedida, espere um pouco para submeter o pedido novamente!";
+            }
+        }
         String result = "";
         try {
             String containerID = client.getAsString(new OID("1.3.6.1.3.2019.3.1.5." + container_index));
@@ -127,6 +151,16 @@ public class SNMPAgentFunctions {
     }
 
     public String loadParameters(int image_index) {
+        double time = Chrono.stop();
+        if(time >= 60.0) {
+            requests = 1;
+            Chrono.start();
+        } else {
+            requests++;
+            if(requests >= MAX_REQUESTS_PER_MINUTE) {
+                return "Capacidade do servidor excedida, espere um pouco para submeter o pedido novamente!";
+            }
+        }
         String returnResult = "";
         try {
             String imagem_escolhida = client.getAsString(new OID("1.3.6.1.3.2019.2.1.1." + image_index));
@@ -142,6 +176,16 @@ public class SNMPAgentFunctions {
     }
 
     public String create() {
+        double time = Chrono.stop();
+        if(time >= 60.0) {
+            requests = 1;
+            Chrono.start();
+        } else {
+            requests++;
+            if(requests >= MAX_REQUESTS_PER_MINUTE) {
+                return "Capacidade do servidor excedida, espere um pouco para submeter o pedido novamente!";
+            }
+        }
         String result = "";
         try {
             String testeParam = client.getAsString(indexParam);
@@ -195,6 +239,16 @@ public class SNMPAgentFunctions {
     }
 
     public String listContainers() {
+        double time = Chrono.stop();
+        if(time >= 60.0) {
+            requests = 1;
+            Chrono.start();
+        } else {
+            requests++;
+            if(requests >= MAX_REQUESTS_PER_MINUTE) {
+                return "Capacidade do servidor excedida, espere um pouco para submeter o pedido novamente!";
+            }
+        }
         try {
             return verificarContainers();
         } catch(IOException e ){
