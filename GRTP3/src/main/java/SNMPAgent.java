@@ -24,9 +24,6 @@ public class SNMPAgent extends BaseAgent {
         this.address = address;
     }
 
-        /**
-         * Adds community to security name mappings needed for SNMPv1 and SNMPv2c.
-         **/
     @Override
     protected void addCommunities(SnmpCommunityMIB communityMIB) {
 
@@ -47,26 +44,14 @@ public class SNMPAgent extends BaseAgent {
 
     }
 
-    /**
-     * Adds initial notification targets and filters.
-     */
-
     @Override
     protected void addNotificationTargets(SnmpTargetMIB arg0, SnmpNotificationMIB arg1) {
         // TODO Auto-generated method stub
     }
 
-        /**
-         * Adds all the necessary initial users to the USM.
-         */
-
     @Override
     protected void addUsmUser(USM arg0) {
     }
-
-        /**
-         * Adds initial VACM configuration.
-         */
 
     @Override
     protected void addViews(VacmMIB vacm) {
@@ -85,14 +70,9 @@ public class SNMPAgent extends BaseAgent {
 
     }
 
-        /**
-         * Unregister the basic MIB modules from the agent's MOServer.
-         */
-
     @Override
     protected void unregisterManagedObjects() {
         // TODO Auto-generated method stub
-
     }
 
     @Override

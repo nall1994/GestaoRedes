@@ -16,10 +16,6 @@ public class SNMPManager {
     private Snmp snmp;
     private String address;
 
-/**
- * Constructor
- * @param add
- */
     public SNMPManager(String add) {
         super();
         this.address = add;
@@ -30,35 +26,12 @@ public class SNMPManager {
         }
     }
 
-    public static void main(String[] args) throws IOException {
-        SNMPManager client = new SNMPManager("udp:127.0.0.1/161");
-        //client.start();
-        String sysDescr = client.getAsString(new OID(".1.3.6.1.2.1.1.1.0"));
-        System.out.println(sysDescr);
-    }
-
-/**
-
- * Start the Snmp session. If you forget the listen() method you will not
-
- * get any answers because the communication is asynchronous
- * and the listen() method listens for answers.
- * @throws IOException
- */
-
     public void start() throws IOException {
         TransportMapping transport = new DefaultUdpTransportMapping();
         snmp = new Snmp(transport);
         //Nunca esquecer!
         transport.listen();
     }
-
-/**
- * Method which takes a single OID and returns the response from the agent as a String.
- * @param oid
- * @return
- * @throws IOException
- */
 
     public String getAsString(OID oid) throws IOException {
         ResponseEvent event = get(new OID[] { oid });
@@ -94,13 +67,6 @@ public class SNMPManager {
         return snmp.set(pdu,getTarget());
     }
 
-/**
- * This method is capable of handling multiple OIDs
- * @param oids
- * return
- * @throws IOException
- */
-
     public ResponseEvent get(OID oids[]) throws IOException {
         PDU pdu = new PDU();
         for (OID oid : oids) {
@@ -113,11 +79,6 @@ public class SNMPManager {
         }
         throw new RuntimeException("GET timed out");
     }
-/**
- * This method returns a Target, which contains information about
- * where the data should be fetched and how.
- * @return
- */
 
     private Target getTarget() {
         Address targetAddress = GenericAddress.parse(address);

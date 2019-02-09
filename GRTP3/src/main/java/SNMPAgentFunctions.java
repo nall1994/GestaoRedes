@@ -58,7 +58,7 @@ public class SNMPAgentFunctions {
     }
 
     private void init(Agente agente) throws IOException {
-        agent = new SNMPAgent("0.0.0.0/" + agente.getPorta());
+        agent = new SNMPAgent("127.0.0.1/" + agente.getPorta());
         agent.start();
         agent.unregisterManagedObject(agent.getSnmpv2MIB());
         ArrayList<String> images = agente.getImagens();
@@ -304,7 +304,7 @@ public class SNMPAgentFunctions {
 
     }
 
-    private String verificarContainers() throws IOException{
+    public String verificarContainers() throws IOException{
         int nContainers = Integer.parseInt(client.getAsString(contadorContainers));
         String nomeCont = "";
         String idCont = "";
@@ -331,6 +331,19 @@ public class SNMPAgentFunctions {
         }
         toBePassed += "\nOperação concluída com sucesso";
         return toBePassed;
+    }
+
+    public boolean verificaContainer(){
+        String value="None";
+        try {
+            value = client.getAsString(nameParam);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        if(value.equals("None")){
+            return false;
+        }
+        return true;
     }
 
 }

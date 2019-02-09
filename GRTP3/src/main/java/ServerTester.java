@@ -25,6 +25,10 @@ public class ServerTester extends Thread {
             switch(escolha) {
                 case 1:
                     //Pedir carregamento de parâmetros
+                    if(agent_functions.verificaContainer()){
+                        System.out.println("Já existe um container com parametros carregados");
+                        break;
+                    }
                     printContainersMenu();
                     escolha = scanner.nextInt();
                     result = agent_functions.loadParameters(escolha);
@@ -43,13 +47,22 @@ public class ServerTester extends Thread {
                 case 4:
                     //remover container
                     String createdContainers = agent_functions.getCreatedContainers();
+                    if(createdContainers.equals("")) {
+                        System.out.println("Não existem containers registados!");
+                        break;
+                    }
                     printCreatedContainersMenu(createdContainers);
                     escolha = scanner.nextInt();
                     result = agent_functions.removeContainer(escolha);
                     System.out.println(result);
+                    break;
                 case 5:
                     //iniciar container
                     createdContainers = agent_functions.getCreatedContainers();
+                    if(createdContainers.equals("")) {
+                        System.out.println("Não existem containers registados!");
+                        break;
+                    }
                     printCreatedContainersMenu(createdContainers);
                     escolha = scanner.nextInt();
                     result = agent_functions.startContainer(escolha);
@@ -58,6 +71,10 @@ public class ServerTester extends Thread {
                 case 6:
                     //parar container
                     createdContainers = agent_functions.getCreatedContainers();
+                    if(createdContainers.equals("")) {
+                        System.out.println("Não existem containers registados!");
+                        break;
+                    }
                     printCreatedContainersMenu(createdContainers);
                     escolha = scanner.nextInt();
                     result = agent_functions.stopContainer(escolha);
